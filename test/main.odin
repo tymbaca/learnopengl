@@ -57,20 +57,34 @@ main :: proc() {
         // }
     }
 
-    {
-        // mat := mat4{
-        //     1,  2,  3,  4,
-        //     5,  6,  7,  8,
-        //     9,  10, 11, 12,
-        //     13, 14, 15, 16
-        // }
-        mat := linalg.identity(mat4)
+    // {
+    //     // mat := mat4{
+    //     //     1,  2,  3,  4,
+    //     //     5,  6,  7,  8,
+    //     //     9,  10, 11, 12,
+    //     //     13, 14, 15, 16
+    //     // }
+    //     mat := linalg.identity(mat4)
+    //
+    //     mat = linalg.transpose(mat)
+    //     ptr := ([^]f32)(&mat)
+    //     for i in 0..<16 {
+    //         fmt.println(ptr[i])
+    //     }
+    // }
 
-        mat = linalg.transpose(mat)
-        ptr := ([^]f32)(&mat)
-        for i in 0..<16 {
-            fmt.println(ptr[i])
-        }
+    {
+        ortho := linalg.matrix_ortho3d_f32(0, 10, 0, 10, 0, 10)
+        fmt.println(ortho * vec4{2, 5, 4, 1})
+    }
+
+    {
+        persp := linalg.matrix4_perspective_f32(45, 600/400, 0.1, 100)
+        fmt.println(persp * vec4{0, 10, 1, 1})
+        fmt.println(persp * vec4{0, 10, 5, 1})
+        fmt.println(persp * vec4{0, 10, 10, 1})
+        fmt.println(persp * vec4{0, 10, 20, 1})
+        fmt.println(persp * vec4{0, 10, 50, 1})
     }
     // log(len("hello") == 5)
     // log(len(val) == 5)

@@ -35,11 +35,18 @@ draw :: proc() {
     // program.set(PROGRAM, "color", color)
     program.set(PROGRAM, "globalScale", f32(factor))
 
-    transform := linalg.identity_matrix(mat4)
-    transform = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG, vec3{0,0,1}) * transform
-    transform = linalg.matrix4_scale_f32(vec3{0.5,0.5,0.5}) * transform
-    transform = linalg.matrix4_translate_f32(vec3{0,-0.2,0}) * transform
-    program.set(PROGRAM, "transform", transform)
+    model := linalg.identity_matrix(mat4)
+    model = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG, vec3{1,0,0}) * model
+    // transform = linalg.matrix4_scale_f32(vec3{0.5,0.5,0.5}) * transform
+    // transform = linalg.matrix4_translate_f32(vec3{0,-0.8,0}) * transform
+
+    view := linalg.matrix4_translate_f32({0, 0, -3}) * linalg.identity_matrix(mat4)
+
+    projection := linalg.matrix4_perspective_f32(45, WIDTH/HEIGHT, 0.1, 100)
+
+    program.set(PROGRAM, "model", model)
+    program.set(PROGRAM, "view", view)
+    program.set(PROGRAM, "projection", projection)
 
     gl.BindVertexArray(VAO)
     gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, EBO)
