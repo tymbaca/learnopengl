@@ -11,11 +11,13 @@ import "core:time"
 import "shader/program"
 
 PROGRAMNAME :: "Program"
-WIDTH :: 512
-HEIGHT :: 512
+WIDTH :: 1500
+HEIGHT :: 700
 
 GL_MAJOR_VERSION: c.int : 4
 GL_MINOR_VERSION :: 1
+
+WINDOW: glfw.WindowHandle
 
 VERTEX_SHADER :: "shader/vertex.glsl"
 FRAGMENT_SHADER :: "shader/fragment.glsl"
@@ -48,21 +50,21 @@ main :: proc() {
 	glfw.WindowHint(glfw.CONTEXT_VERSION_MAJOR, GL_MAJOR_VERSION)
 	glfw.WindowHint(glfw.CONTEXT_VERSION_MINOR, GL_MINOR_VERSION)
 
-	window := glfw.CreateWindow(WIDTH, HEIGHT, PROGRAMNAME, nil, nil)
-	defer glfw.DestroyWindow(window)
+	WINDOW = glfw.CreateWindow(WIDTH, HEIGHT, PROGRAMNAME, nil, nil)
+	defer glfw.DestroyWindow(WINDOW)
 
-	if window == nil {
-		fmt.println("Unable to create window")
+	if WINDOW == nil {
+		fmt.println("Unable to create WINDOW")
 		return
 	}
 
-	glfw.MakeContextCurrent(window)
+	glfw.MakeContextCurrent(WINDOW)
 
 	glfw.SwapInterval(1)
 
-	glfw.SetKeyCallback(window, key_callback)
+	glfw.SetKeyCallback(WINDOW, key_callback)
 
-	glfw.SetFramebufferSizeCallback(window, size_callback)
+	glfw.SetFramebufferSizeCallback(WINDOW, size_callback)
 
 	gl.load_up_to(int(GL_MAJOR_VERSION), GL_MINOR_VERSION, glfw.gl_set_proc_address)
 
@@ -73,7 +75,7 @@ main :: proc() {
 
     gl.Enable(gl.DEPTH_TEST)
 
-	for (!glfw.WindowShouldClose(window) && _running) {
+	for (!glfw.WindowShouldClose(WINDOW) && _running) {
 		glfw.PollEvents()
 
         gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
@@ -81,7 +83,7 @@ main :: proc() {
 		update()
 		draw()
 
-		glfw.SwapBuffers((window))
+		glfw.SwapBuffers((WINDOW))
 	}
 
 	exit()

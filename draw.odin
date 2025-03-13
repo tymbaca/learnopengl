@@ -48,7 +48,8 @@ draw :: proc() {
         view = linalg.matrix4_rotate_f32(global_time * math.RAD_PER_DEG, {0, 1, 0}) * view
         view = linalg.matrix4_translate_f32({0, 0, -3}) * view
 
-        projection := linalg.matrix4_perspective_f32(45, WIDTH/HEIGHT, 0.1, 100)
+        w, h := glfw.GetWindowSize(WINDOW)
+        projection := linalg.matrix4_perspective_f32(55, f32(w)/f32(h), 0.1, 100)
 
         program.set(PROGRAM, "model", model)
         program.set(PROGRAM, "view", view)
