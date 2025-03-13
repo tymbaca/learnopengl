@@ -1,8 +1,6 @@
 #version 410 core
 
-in vec4 color;
 in vec2 uv;
-in float factor;
 
 out vec4 FragColor;
 

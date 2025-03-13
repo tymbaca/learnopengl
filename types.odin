@@ -10,9 +10,7 @@ mat4 :: matrix[4, 4]f32
 
 Vertex_Attributes :: struct {
 	pos:   vec3,
-	color: vec3,
 	uv:    vec2,
-	scale: f32,
 }
 
 dot :: linalg.dot
