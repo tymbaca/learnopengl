@@ -35,6 +35,8 @@ TextureKind :: enum {
     awesomeface,
 }
 
+CAMERA := Camera{pos = {}}
+
 START := time.now()
 
 main :: proc() {
@@ -88,10 +90,6 @@ main :: proc() {
 
 	exit()
 
-}
-
-update :: proc() {
-	// Own update code here
 }
 
 
