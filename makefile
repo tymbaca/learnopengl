@@ -1,5 +1,11 @@
+SHELL := /bin/bash
+
 run: shader
-	odin run . -out:tymbaca.bin
+	export ODIN=odin; \
+	if hash odin.exe 2>/dev/null; then \
+		export ODIN=odin.exe; \
+	fi; \
+	$$ODIN run . -out:tymbaca.bin
 
 shader: 
 	@echo ""

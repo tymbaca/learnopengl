@@ -2,6 +2,7 @@ package main
 
 import "core:math"
 import "core:math/linalg"
+import "core:slice"
 
 dot :: linalg.dot
 cross :: linalg.cross
@@ -21,11 +22,6 @@ mat4 :: matrix[4, 4]f32
 Vertex_Attributes :: struct {
 	pos:   vec3,
 	uv:    vec2,
-}
-
-to_vertex_attributes :: proc(fs: []f32) -> []Vertex_Attributes {
-    varr := cast([^]Vertex_Attributes)raw_data(fs)
-    return varr[:len(fs)/5]
 }
 
 Camera :: struct {

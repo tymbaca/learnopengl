@@ -1,5 +1,6 @@
 package main
 
+import "core:slice"
 import "base:runtime"
 import "core:c"
 import "core:fmt"
@@ -23,7 +24,7 @@ init :: proc() -> (ok: bool) {
 	PROGRAM = program.new(VERTEX_SHADER, FRAGMENT_SHADER) or_return
 
 	// Own drawing code here
-	vs := to_vertex_attributes([]f32{
+	vs := slice.reinterpret([]Vertex_Attributes, []f32{
         -0.5, -0.5, -0.5,  0.0, 0.0,
         0.5, -0.5, -0.5,  1.0, 0.0,
         0.5,  0.5, -0.5,  1.0, 1.0,
