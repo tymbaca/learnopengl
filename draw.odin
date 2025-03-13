@@ -50,5 +50,5 @@ draw :: proc() {
 
     gl.BindVertexArray(VAO)
     gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, EBO)
-    gl.DrawElements(gl.TRIANGLES, 9, gl.UNSIGNED_INT, nil)
+    gl.DrawElements(gl.TRIANGLES, 36, gl.UNSIGNED_INT, nil)
 }

@@ -24,7 +24,33 @@ DEG_PER_RAD :: linalg.DEG_PER_RAD
 RAD_PER_DEG :: linalg.RAD_PER_DEG
 normalize :: linalg.normalize
 
+Vertex_Attributes :: struct {
+    pos: vec3,
+    uv: vec2,
+}
+
+// to_vertex_attributes :: #force_inline proc(arr: $T/[$N]f32) -> []Vertex_Attributes {
+//     varr := transmute([N/5]Vertex_Attributes)arr
+//     return varr[:]
+// }
+
+to_vertex_attributes :: proc(fs: []f32) -> []Vertex_Attributes {
+    varr := cast([^]Vertex_Attributes)raw_data(fs)
+    return varr[:len(fs)/5]
+}
+
 main :: proc() {
+
+    data := []f32{
+        1, 2, 3, 4, 5,
+        1, 2, 3, 4, 5,
+    }
+
+    vas := to_vertex_attributes(data)
+
+    for va in vas {
+        fmt.println(va)
+    }
     // {
     //     v1 := vec2{1, 0}
     //     v2 := vec2{0, 1}
@@ -73,19 +99,19 @@ main :: proc() {
     //     }
     // }
 
-    {
-        ortho := linalg.matrix_ortho3d_f32(0, 10, 0, 10, 0, 10)
-        fmt.println(ortho * vec4{2, 5, 4, 1})
-    }
-
-    {
-        persp := linalg.matrix4_perspective_f32(45, 600/400, 0.1, 100)
-        fmt.println(persp * vec4{0, 10, 1, 1})
-        fmt.println(persp * vec4{0, 10, 5, 1})
-        fmt.println(persp * vec4{0, 10, 10, 1})
-        fmt.println(persp * vec4{0, 10, 20, 1})
-        fmt.println(persp * vec4{0, 10, 50, 1})
-    }
+    // {
+    //     ortho := linalg.matrix_ortho3d_f32(0, 10, 0, 10, 0, 10)
+    //     fmt.println(ortho * vec4{2, 5, 4, 1})
+    // }
+    //
+    // {
+    //     persp := linalg.matrix4_perspective_f32(45, 600/400, 0.1, 100)
+    //     fmt.println(persp * vec4{0, 10, 1, 1})
+    //     fmt.println(persp * vec4{0, 10, 5, 1})
+    //     fmt.println(persp * vec4{0, 10, 10, 1})
+    //     fmt.println(persp * vec4{0, 10, 20, 1})
+    //     fmt.println(persp * vec4{0, 10, 50, 1})
+    // }
     // log(len("hello") == 5)
     // log(len(val) == 5)
 }

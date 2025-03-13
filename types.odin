@@ -13,6 +13,11 @@ Vertex_Attributes :: struct {
 	uv:    vec2,
 }
 
+to_vertex_attributes :: proc(fs: []f32) -> []Vertex_Attributes {
+    varr := cast([^]Vertex_Attributes)raw_data(fs)
+    return varr[:len(fs)/5]
+}
+
 dot :: linalg.dot
 cross :: linalg.cross
 cos :: math.cos
