@@ -11,6 +11,14 @@ import "core:math/linalg"
 import "core:time"
 import "shader/program"
 
+cube_positions := []vec3{
+    {0,0,0},
+    {2,0,0},
+    {2,1,0},
+    {-4,1,0},
+    {-4,-3,0},
+}
+
 draw :: proc() {
 	// Set the opengl clear color
 	// 0-1 rgba values
@@ -30,17 +38,22 @@ draw :: proc() {
     // factor := math.sin(time.duration_seconds(time.since(START)))
     factor := 1
 
-    gl.BindVertexArray(VAO)
-    model := linalg.identity_matrix(mat4)
-    model = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG, vec3{1,0,0}) * model
+    for pos in cube_positions {
+        gl.BindVertexArray(VAO)
+        model := linalg.identity_matrix(mat4)
+        model = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG, vec3{1,0,0}) * model
+        model = linalg.matrix4_translate_f32(pos) * model
 
-    view := linalg.matrix4_translate_f32({0, 0, -3}) * linalg.identity_matrix(mat4)
+        view := linalg.identity_matrix(mat4)
+        view = linalg.matrix4_rotate_f32(global_time * math.RAD_PER_DEG, {0, 1, 0}) * view
+        view = linalg.matrix4_translate_f32({0, 0, -3}) * view
 
-    projection := linalg.matrix4_perspective_f32(45, WIDTH/HEIGHT, 0.1, 100)
-    gl.DrawArrays(gl.TRIANGLES, 0, 36)
+        projection := linalg.matrix4_perspective_f32(45, WIDTH/HEIGHT, 0.1, 100)
 
-    program.set(PROGRAM, "model", model)
-    program.set(PROGRAM, "view", view)
-    program.set(PROGRAM, "projection", projection)
+        program.set(PROGRAM, "model", model)
+        program.set(PROGRAM, "view", view)
+        program.set(PROGRAM, "projection", projection)
 
+        gl.DrawArrays(gl.TRIANGLES, 0, 36)
+    }
 }
