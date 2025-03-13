@@ -71,8 +71,12 @@ main :: proc() {
         return
     }
 
+    gl.Enable(gl.DEPTH_TEST)
+
 	for (!glfw.WindowShouldClose(window) && _running) {
 		glfw.PollEvents()
+
+        gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 		update()
 		draw()
