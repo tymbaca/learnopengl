@@ -70,22 +70,14 @@ init :: proc() -> (ok: bool) {
 	stride :: size_of(Vertex_Attributes)
     fmt.println("attr size ", size_of(Vertex_Attributes))
 
-	indices := []u32 {
-
-	}
-
 	gl.GenVertexArrays(1, &VAO)
-	gl.BindVertexArray(VAO)
-
 	gl.GenBuffers(1, &VBO)
-	gl.GenBuffers(1, &EBO)
+
+	gl.BindVertexArray(VAO)
 
 	fmt.println(size_of(f32) * len(vs))
 	gl.BindBuffer(gl.ARRAY_BUFFER, VBO)
 	gl.BufferData(gl.ARRAY_BUFFER, size_of(Vertex_Attributes) * len(vs), raw_data(vs), gl.STATIC_DRAW)
-
-	gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, EBO)
-	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, size_of(u32) * len(indices), raw_data(indices), gl.STATIC_DRAW)
 
 	posLoc :: 0
 	gl.VertexAttribPointer(posLoc, 3, gl.FLOAT, false, stride, 0)

@@ -24,7 +24,7 @@ PROGRAM: program.Program
 _running: b32 = true
 VAO: u32
 VBO: u32
-EBO: u32
+// EBO: u32
 TEXTURES: [TextureKind]program.Texture
 
 TextureKind :: enum {
