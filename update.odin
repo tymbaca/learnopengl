@@ -11,7 +11,7 @@ import "core:time"
 import "shader/program"
 import "core:c"
 
-SPEED :: 0.01
+SPEED :: 0.1
 
 update :: proc() {
     mov: vec3
@@ -27,19 +27,19 @@ update :: proc() {
     if is_key_pressed(glfw.KEY_A) {
         mov.x -= SPEED
     }
-    if is_key_pressed(glfw.KEY_F) {
+    if is_key_pressed(glfw.KEY_R) {
         mov.y += SPEED
     }
-    if is_key_pressed(glfw.KEY_R) {
+    if is_key_pressed(glfw.KEY_F) {
         mov.y -= SPEED
     }
 
-    // CAMERA.pos += mov
+    CAMERA.pos += mov
 
-    // look_at, ok := CAMERA.look_at.?
-    // if ok {
-    //     CAMERA.dir = linalg.normalize(CAMERA.pos - look_at)
-    // }
+    look_at, ok := CAMERA.look_at.?
+    if ok {
+        CAMERA.dir = linalg.normalize(look_at - CAMERA.pos)
+    }
     // view := linalg.matrix4_look_at_f32(CAMERA.pos, CAMERA.pos + CAMERA.dir, CAMERA.up)
     // mov = (view * to_vec4(mov)).xyz
     // CAMERA.pos += mov
