@@ -31,8 +31,10 @@ Vertex_Attributes :: struct {
 }
 
 Camera :: struct {
-    pos: vec3,
-    dir: vec3, // local for pos
     up: vec3, // {0,1,0} for default
+    pos: vec3,
+    yaw, pitch: f32,
+    // calculated
     look_at: Maybe(vec3),
+    dir: vec3, // local for pos
 }
