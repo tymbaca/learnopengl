@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 run: shader
-	export ODIN=odin; \
+	@export ODIN=odin; \
 	if hash odin.exe 2>/dev/null; then \
 		export ODIN=odin.exe; \
 	fi; \

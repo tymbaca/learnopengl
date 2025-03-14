@@ -40,17 +40,20 @@ to_vertex_attributes :: proc(fs: []f32) -> []Vertex_Attributes {
 }
 
 main :: proc() {
-
-    data := []f32{
-        1, 2, 3, 4, 5,
-        1, 2, 3, 4, 5,
+    {
+        linalg.matrix3_look_at_f32()
     }
 
-    vas := to_vertex_attributes(data)
-
-    for va in vas {
-        fmt.println(va)
-    }
+    // data := []f32{
+    //     1, 2, 3, 4, 5,
+    //     1, 2, 3, 4, 5,
+    // }
+    //
+    // vas := to_vertex_attributes(data)
+    //
+    // for va in vas {
+    //     fmt.println(va)
+    // }
     // {
     //     v1 := vec2{1, 0}
     //     v2 := vec2{0, 1}
