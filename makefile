@@ -2,10 +2,9 @@ SHELL := /bin/bash
 
 run: 
 	@export ODIN=odin; \
-	$$ODIN run . -out:tymbaca.bin
-	# if hash odin.exe 2>/dev/null; then \
-	# 	export ODIN=odin.exe; \
-	# fi; \
+	if hash odin.exe 2>/dev/null; then \
+		export ODIN=odin.exe; \
+	fi; \
 	$$ODIN run . -out:tymbaca.bin
 
 range:

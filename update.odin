@@ -34,12 +34,12 @@ update :: proc() {
         mov.y -= SPEED
     }
 
-    CAMERA.pos += mov
+    // CAMERA.pos += mov
 
-    look_at, ok := CAMERA.look_at.?
-    if ok {
-        CAMERA.dir = look_at - CAMERA.pos
-    }
+    // look_at, ok := CAMERA.look_at.?
+    // if ok {
+    //     CAMERA.dir = linalg.normalize(CAMERA.pos - look_at)
+    // }
     // view := linalg.matrix4_look_at_f32(CAMERA.pos, CAMERA.pos + CAMERA.dir, CAMERA.up)
     // mov = (view * to_vec4(mov)).xyz
     // CAMERA.pos += mov

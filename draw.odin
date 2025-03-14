@@ -49,12 +49,19 @@ draw :: proc() {
         model = linalg.matrix4_translate_f32(pos) * model
 
         // view := linalg.identity_matrix(mat4)
-        view := linalg.matrix4_look_at_f32(CAMERA.pos, (CAMERA.dir - CAMERA.pos), -CAMERA.up)
+        // camera_right := normalize(cross(UP, CAMERA.dir))
+        // camera_up := cross(CAMERA.dir, camera_right)
+        // view := linalg.matrix4_look_at_f32(CAMERA.pos, (CAMERA.dir - CAMERA.pos), -CAMERA.up)
         // view = linalg.matrix4_rotate_f32(global_time * math.RAD_PER_DEG, {0, 1, 0}) * view
         // view = linalg.matrix4_translate_f32(CAMERA.pos * {1, 1, -1}) * view
 
+        radius :: 10
+        cam_x := sin(global_time) * radius
+        cam_z := cos(global_time) * radius
+        view := linalg.matrix4_look_at_f32({-3, 0, -4}, {0,0,0}, UP)
+
         w, h := glfw.GetWindowSize(WINDOW)
-        projection := linalg.matrix4_perspective_f32(55, f32(w)/f32(h), 0.1, 100)
+        projection := linalg.matrix4_perspective_f32(65*RAD_PER_DEG, f32(w)/f32(h), 0.1, 100)
 
         program.set(PROGRAM, "model", model)
         program.set(PROGRAM, "view", view)
