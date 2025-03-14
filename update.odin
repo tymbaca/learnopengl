@@ -11,37 +11,37 @@ import "core:time"
 import "shader/program"
 import "core:c"
 
-SPEED :: 0.1
+SPEED :: 0.01
 
-update :: proc() {
-    update_camera(&CAMERA)
+update :: proc(delta: f32) {
+    update_camera(&CAMERA, delta)
 }
 
 
-update_camera :: proc(c: ^Camera) {
-    // c.dir = normalize(c.dir)
+update_camera :: proc(c: ^Camera, delta: f32) {
+    c.dir = normalize(c.dir)
 
     mov: vec3
     if is_key_down(glfw.KEY_W) {
-        mov += c.dir * SPEED
+        mov += c.dir
     }
     if is_key_down(glfw.KEY_S) {
-        mov -= c.dir * SPEED
+        mov -= c.dir
     }
     if is_key_down(glfw.KEY_D) {
-        mov += normalize(cross(c.dir, UP)) * SPEED
+        mov += normalize(cross(c.dir, UP))
     }
     if is_key_down(glfw.KEY_A) {
-        mov -= normalize(cross(c.dir, UP)) * SPEED
+        mov -= normalize(cross(c.dir, UP))
     }
     if is_key_down(glfw.KEY_R) {
-        mov += UP * SPEED
+        mov += UP
     }
     if is_key_down(glfw.KEY_F) {
-        mov -= UP * SPEED
+        mov -= UP
     }
 
-    c.pos += mov
+    c.pos += mov * SPEED * delta
 
     look_at, ok := c.look_at.?
     if ok {

@@ -82,12 +82,17 @@ main :: proc() {
 
     gl.Enable(gl.DEPTH_TEST)
 
+    last_frate := time.now()
 	for (!glfw.WindowShouldClose(WINDOW) && _running) {
 		glfw.PollEvents()
 
+        delta := f32(time.duration_milliseconds(time.since(last_frate)))
+        last_frate = time.now()
+        fmt.println(delta)
+
         gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-		update()
+		update(delta)
 		draw()
 
 		glfw.SwapBuffers((WINDOW))
