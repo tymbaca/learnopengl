@@ -64,7 +64,7 @@ update_camera :: proc(cam: ^Camera, delta: f32) {
     cam.pitch -= MOUSE_DELTA.y * MOUSE_SENSITIVITY
     if cam.pitch > 89 {cam.pitch = 89}
     if cam.pitch < -89 {cam.pitch = -89}
-    fmt.println(cam.pitch, cam.yaw)
+    // fmt.println(cam.pitch, cam.yaw)
 
     cam.pos += mov * SPEED * delta
 
