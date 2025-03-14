@@ -5,10 +5,15 @@ import "core:time"
 import rl "vendor:raylib"
 
 NAME :: "render"
-WIDTH :: 800
-HEIGHT :: 600
+WIDTH :: 1200
+HEIGHT :: 800
 
 _camera: rl.Camera
+
+vec2 :: [2]f32
+vec3 :: [3]f32
+vec4 :: [4]f32
+mat4 :: matrix[4, 4]f32
 
 init :: proc() {
 	rl.InitWindow(WIDTH, HEIGHT, NAME)
@@ -17,7 +22,7 @@ init :: proc() {
 	_camera.position = {0, 2, 4}
 	_camera.up = {0, 1, 0}
 	_camera.target = {0, 0, 1}
-	_camera.fovy = 90
+	_camera.fovy = 60
 	_camera.projection = .PERSPECTIVE
 	rl.DisableCursor()
 }
@@ -31,6 +36,12 @@ main :: proc() {
 	}
 }
 
+transparent :: proc(color: rl.Color, factor: f32) -> rl.Color {
+    color := color
+    color.a = u8(f32(color.a) * factor)
+    return color
+}
+
 draw :: proc() {
 	rl.BeginDrawing()
 	rl.ClearBackground(rl.BLACK)
@@ -38,11 +49,44 @@ draw :: proc() {
 	rl.BeginMode3D(_camera)
 
 	// shit here
-    rl.DrawGrid(10, 10)
+    // rl.DrawGrid(20, 1)
+    rl.DrawLine3D({-10, 0, 0}, {10, 0, 0}, transparent(rl.RED, 0.5))
+    rl.DrawLine3D({0, -10, 0}, {0, 10, 0}, transparent(rl.GREEN, 0.5))
+    rl.DrawLine3D({0, 0, -10}, {0, 0, 10}, transparent(rl.BLUE, 0.5))
+
+    rl.DrawSphere({10, 0, 0}, 0.1, rl.RED)
+    rl.DrawSphere({0, 10, 0}, 0.1, rl.GREEN)
+    rl.DrawSphere({0, 0, 10}, 0.1, rl.BLUE)
+
+    draw_vec({5, 3, -4})
+    draw_vec_from({-2, -2, 1}, {5, 3, -4}, rl.PURPLE)
 
 	rl.EndMode3D()
 
 	rl.EndDrawing()
+}
+
+PROJ :: true
+
+draw_vec :: proc(vec: vec3, color := rl.WHITE) {
+    draw_vec_from({0,0,0}, vec, color)
+}
+
+draw_vec_from :: proc(from, to: vec3, color := rl.WHITE) {
+    rl.DrawLine3D(from, to, color)
+    rl.DrawSphere(to, 0.1, color)
+
+    when PROJ {
+        proj_color := color
+        proj_color.a /= 2
+        rl.DrawLine3D({0,0,0}, to * {1,0,1}, proj_color)
+        rl.DrawLine3D(to, to * {1,0,1}, proj_color)
+
+        if from != {0,0,0} {
+            rl.DrawLine3D({0,0,0}, from * {1,0,1}, proj_color)
+            rl.DrawLine3D(from, from * {1,0,1}, proj_color)
+        }
+    }
 }
 
 SPEED :: .2
