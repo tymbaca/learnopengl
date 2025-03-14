@@ -38,7 +38,7 @@ draw :: proc() {
 
     program.use(PROGRAM)
 
-    global_time := 30*f32(time.duration_seconds(time.since(START)))
+    global_time := f32(time.duration_seconds(time.since(START)))
     // factor := math.sin(time.duration_seconds(time.since(START)))
     factor := 1
 
@@ -58,7 +58,7 @@ draw :: proc() {
         radius :: 10
         cam_x := sin(global_time) * radius
         cam_z := cos(global_time) * radius
-        view := linalg.matrix4_look_at_f32({-3, 0, -4}, {0,0,0}, UP)
+        view := linalg.matrix4_look_at_f32({cam_x, 0, cam_z}, {0,0,0}, UP)
 
         w, h := glfw.GetWindowSize(WINDOW)
         projection := linalg.matrix4_perspective_f32(65*RAD_PER_DEG, f32(w)/f32(h), 0.1, 100)
