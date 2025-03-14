@@ -19,6 +19,12 @@ vec3 :: [3]f32
 vec4 :: [4]f32
 mat4 :: matrix[4, 4]f32
 
+to_vec4 :: proc(vec: vec3) -> vec4 {
+    return {vec.x, vec.y, vec.z, 1}
+}
+
+UP :: vec3{0,1,0}
+
 Vertex_Attributes :: struct {
 	pos:   vec3,
 	uv:    vec2,
@@ -26,4 +32,7 @@ Vertex_Attributes :: struct {
 
 Camera :: struct {
     pos: vec3,
+    dir: vec3, // local for pos
+    up: vec3, // {0,1,0} for default
+    look_at: Maybe(vec3),
 }

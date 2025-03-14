@@ -35,7 +35,7 @@ TextureKind :: enum {
     awesomeface,
 }
 
-CAMERA := Camera{pos = {}}
+CAMERA := Camera{pos = {0,0,0}, dir = {1,0,0}, up = UP, look_at = vec3{0,0,0}}
 
 START := time.now()
 

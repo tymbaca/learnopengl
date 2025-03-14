@@ -3,6 +3,7 @@ package range
 import "core:fmt"
 import "core:time"
 import rl "vendor:raylib"
+import "core:math/linalg"
 
 NAME :: "render"
 WIDTH :: 1200
@@ -58,8 +59,14 @@ draw :: proc() {
     rl.DrawSphere({0, 10, 0}, 0.1, rl.GREEN)
     rl.DrawSphere({0, 0, 10}, 0.1, rl.BLUE)
 
-    draw_vec({5, 3, -4})
-    draw_vec_from({-2, -2, 1}, {5, 3, -4}, rl.PURPLE)
+    // CODE HERE
+    {
+        dir := vec3{2, 3, 4}
+        pos := vec3{2, 3, 3}
+        draw_vec_from(pos, pos+dir)
+        // linalg.matrix4_look_at_f32()
+    }
+
 
 	rl.EndMode3D()
 
