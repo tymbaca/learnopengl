@@ -14,38 +14,45 @@ import "core:c"
 SPEED :: 0.1
 
 update :: proc() {
+    update_camera(&CAMERA)
+}
+
+
+update_camera :: proc(c: ^Camera) {
+    // c.dir = normalize(c.dir)
+
     mov: vec3
-    if is_key_pressed(glfw.KEY_W) {
-        mov.z -= SPEED
+    if is_key_down(glfw.KEY_W) {
+        mov += c.dir * SPEED
     }
-    if is_key_pressed(glfw.KEY_S) {
-        mov.z += SPEED
+    if is_key_down(glfw.KEY_S) {
+        mov -= c.dir * SPEED
     }
-    if is_key_pressed(glfw.KEY_D) {
-        mov.x += SPEED
+    if is_key_down(glfw.KEY_D) {
+        mov += normalize(cross(c.dir, UP)) * SPEED
     }
-    if is_key_pressed(glfw.KEY_A) {
-        mov.x -= SPEED
+    if is_key_down(glfw.KEY_A) {
+        mov -= normalize(cross(c.dir, UP)) * SPEED
     }
-    if is_key_pressed(glfw.KEY_R) {
-        mov.y += SPEED
+    if is_key_down(glfw.KEY_R) {
+        mov += UP * SPEED
     }
-    if is_key_pressed(glfw.KEY_F) {
-        mov.y -= SPEED
+    if is_key_down(glfw.KEY_F) {
+        mov -= UP * SPEED
     }
 
-    CAMERA.pos += mov
+    c.pos += mov
 
-    look_at, ok := CAMERA.look_at.?
+    look_at, ok := c.look_at.?
     if ok {
-        CAMERA.dir = linalg.normalize(look_at - CAMERA.pos)
+        c.dir = linalg.normalize(look_at - CAMERA.pos)
     }
     // view := linalg.matrix4_look_at_f32(CAMERA.pos, CAMERA.pos + CAMERA.dir, CAMERA.up)
     // mov = (view * to_vec4(mov)).xyz
     // CAMERA.pos += mov
 }
 
-is_key_pressed :: proc(key: c.int) -> bool {
+is_key_down :: proc(key: c.int) -> bool {
     state := glfw.GetKey(WINDOW, key)
     return state == glfw.PRESS || state == glfw.REPEAT
 }
