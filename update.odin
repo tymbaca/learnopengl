@@ -17,8 +17,30 @@ MOUSE_SENSITIVITY :: 0.3
 
 update :: proc(delta: f32) {
     update_camera(&CAMERA, delta)
+    update_light()
 }
 
+update_light :: proc() {
+    if is_key_down(glfw.KEY_U) {
+        LIGHT_COLOR.r += 0.1
+    }
+    if is_key_down(glfw.KEY_J) {
+        LIGHT_COLOR.r -= 0.1
+    }
+    if is_key_down(glfw.KEY_I) {
+        LIGHT_COLOR.g += 0.1
+    }
+    if is_key_down(glfw.KEY_K) {
+        LIGHT_COLOR.g -= 0.1
+    }
+    if is_key_down(glfw.KEY_O) {
+        LIGHT_COLOR.b += 0.1
+    }
+    if is_key_down(glfw.KEY_L) {
+        LIGHT_COLOR.b -= 0.1
+    }
+    LIGHT_COLOR = linalg.clamp(LIGHT_COLOR, 0, 1)
+}
 
 update_camera :: proc(cam: ^Camera, delta: f32) {
     cam.dir = normalize(cam.dir)

@@ -22,6 +22,7 @@ init :: proc() -> (ok: bool) {
     TEXTURES[.awesomeface] = shader.load_texture("resources/awesomeface.png") or_return
 
 	CUBE_SHADER = shader.new("resources/shader/cube.vs", "resources/shader/cube.fs") or_return
+	LIGHT_SHADER = shader.new("resources/shader/light.vs", "resources/shader/light.fs") or_return
 
 	// Own drawing code here
 	vs := slice.reinterpret([]Vertex_Attributes, []f32{
@@ -92,8 +93,6 @@ init :: proc() -> (ok: bool) {
 	gl.EnableVertexAttribArray(posLoc)
 
     shader.use(CUBE_SHADER)
-    shader.set(CUBE_SHADER, "ourTexture1", i32(0))
-    shader.set(CUBE_SHADER, "ourTexture2", i32(1))
     shader.set(CUBE_SHADER, "cubeColor", vec3{1.0, 0.5, 0.31})
     shader.set(CUBE_SHADER, "lightColor", vec3{1.0, 1.0, 1.0})
     

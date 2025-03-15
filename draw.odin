@@ -23,6 +23,7 @@ cube_positions := []vec3{
     {0,0,4},
 }
 
+LIGHT_COLOR := vec3{0.6, 1, 0.1}
 light_positions := []vec3{
     {4,4,4},
 }
@@ -30,7 +31,8 @@ light_positions := []vec3{
 draw :: proc() {
 	// Set the opengl clear color
 	// 0-1 rgba values
-	gl.ClearColor(0.2, 0.3, 0.3, 1.0)
+    bg := LIGHT_COLOR * 0.1
+	gl.ClearColor(bg.r, bg.g, bg.b, 1.0)
 	// Clear the screen with the set clearcolor
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 
@@ -57,17 +59,31 @@ draw :: proc() {
 
 
         shader.use(CUBE_SHADER)
+
         shader.set(CUBE_SHADER, "model", model)
         shader.set(CUBE_SHADER, "view", view)
         shader.set(CUBE_SHADER, "projection", projection)
+
+        shader.set(CUBE_SHADER, "ourTexture1", TEXTURES[.wall].id)
+        shader.set(CUBE_SHADER, "ourTexture2", i32(1))
+        shader.set(CUBE_SHADER, "lightColor", LIGHT_COLOR)
+
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
 
     for pos in light_positions {
+        gl.BindVertexArray(LIGHT_VAO)
         model := linalg.identity(mat4)
         model = linalg.matrix4_scale_f32({0.4, 0.4, 0.4}) * model
         model = linalg.matrix4_translate_f32(pos) * model
-        //
-        // shader.use(LIGHT_SHADER)
+        
+        shader.use(LIGHT_SHADER)
+        shader.set(LIGHT_SHADER, "model", model)
+        shader.set(LIGHT_SHADER, "view", view)
+        shader.set(LIGHT_SHADER, "projection", projection)
+
+        shader.set(LIGHT_SHADER, "color", LIGHT_COLOR)
+
+        gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
 }

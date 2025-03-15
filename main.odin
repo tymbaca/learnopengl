@@ -20,6 +20,7 @@ GL_MINOR_VERSION :: 1
 WINDOW: glfw.WindowHandle
 
 CUBE_SHADER: shader.Program
+LIGHT_SHADER: shader.Program
 
 _running: b32 = true
 CONTAINER_VAO: u32
