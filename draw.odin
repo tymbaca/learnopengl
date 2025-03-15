@@ -75,7 +75,7 @@ draw :: proc() {
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
 
-    for pos in light_positions {
+    for pos in ([]vec3{LIGHT_POS}) {
         gl.BindVertexArray(LIGHT_VAO)
         model := linalg.identity(mat4)
         model = linalg.matrix4_scale_f32({0.4, 0.4, 0.4}) * model

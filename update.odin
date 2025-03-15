@@ -40,6 +40,22 @@ update_light :: proc() {
         LIGHT_COLOR.b -= 0.1
     }
     LIGHT_COLOR = linalg.clamp(LIGHT_COLOR, 0, 1)
+
+
+    mov: vec3
+    if is_key_down(glfw.KEY_RIGHT) {
+        mov.x += 1
+    }
+    if is_key_down(glfw.KEY_LEFT) {
+        mov.x -= 1 
+    }
+    if is_key_down(glfw.KEY_UP) {
+        mov.z -= 1 
+    }
+    if is_key_down(glfw.KEY_DOWN) {
+        mov.z += 1 
+    }
+    LIGHT_POS += mov * SPEED * 5
 }
 
 update_camera :: proc(cam: ^Camera, delta: f32) {
@@ -65,22 +81,6 @@ update_camera :: proc(cam: ^Camera, delta: f32) {
         mov -= UP
     }
 
-    yaw: f32
-    pitch: f32
-    if is_key_down(glfw.KEY_LEFT) {
-        yaw -= 1
-    }
-    if is_key_down(glfw.KEY_RIGHT) {
-        yaw += 1
-    }
-    if is_key_down(glfw.KEY_UP) {
-        pitch += 1
-    }
-    if is_key_down(glfw.KEY_DOWN) {
-        pitch -= 1
-    }
-    cam.yaw += yaw * ROT_SPEED * delta
-    cam.pitch += pitch * ROT_SPEED * delta
 
     cam.yaw += MOUSE_DELTA.x * MOUSE_SENSITIVITY
     cam.pitch -= MOUSE_DELTA.y * MOUSE_SENSITIVITY
