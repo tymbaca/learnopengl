@@ -1,7 +1,6 @@
 package main
 
 import "core:time"
-import "../shader/program"
 import "core:fmt"
 import "core:image"
 import "core:image/png"
@@ -41,8 +40,13 @@ to_vertex_attributes :: proc(fs: []f32) -> []Vertex_Attributes {
 
 main :: proc() {
     {
-        linalg.matrix3_look_at_f32()
+        v1 := vec3{5, 0, 0}
+        v2 := vec3{1, 0, 5}
+        fmt.println(dot(normalize(v1), normalize(v2)))
     }
+    // {
+    //     linalg.matrix3_look_at_f32()
+    // }
 
     // data := []f32{
     //     1, 2, 3, 4, 5,

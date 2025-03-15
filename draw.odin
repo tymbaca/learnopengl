@@ -31,8 +31,8 @@ light_positions := []vec3{
 draw :: proc() {
 	// Set the opengl clear color
 	// 0-1 rgba values
-    bg := LIGHT_COLOR * 0.1
-	gl.ClearColor(bg.r, bg.g, bg.b, 1.0)
+    global_light := LIGHT_COLOR * 0.1
+	gl.ClearColor(global_light.r, global_light.g, global_light.b, 1.0)
 	// Clear the screen with the set clearcolor
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 
@@ -66,7 +66,7 @@ draw :: proc() {
 
         shader.set(CUBE_SHADER, "ourTexture1", TEXTURES[.wall].id)
         shader.set(CUBE_SHADER, "ourTexture2", i32(1))
-        shader.set(CUBE_SHADER, "lightColor", LIGHT_COLOR)
+        shader.set(CUBE_SHADER, "ambientLight", global_light)
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
