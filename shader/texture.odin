@@ -1,4 +1,4 @@
-package program
+package shader
 
 import "core:fmt"
 import "core:reflect"

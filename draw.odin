@@ -9,7 +9,7 @@ import rl "vendor:raylib"
 import "core:math"
 import "core:math/linalg"
 import "core:time"
-import "shader/program"
+import "shader"
 
 cube_positions := []vec3{
     {0,0,0},
@@ -56,10 +56,10 @@ draw :: proc() {
         model = linalg.matrix4_translate_f32(pos) * model
 
 
-        program.use(CUBE_SHADER)
-        program.set(CUBE_SHADER, "model", model)
-        program.set(CUBE_SHADER, "view", view)
-        program.set(CUBE_SHADER, "projection", projection)
+        shader.use(CUBE_SHADER)
+        shader.set(CUBE_SHADER, "model", model)
+        shader.set(CUBE_SHADER, "view", view)
+        shader.set(CUBE_SHADER, "projection", projection)
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
 
@@ -68,6 +68,6 @@ draw :: proc() {
         model = linalg.matrix4_scale_f32({0.4, 0.4, 0.4}) * model
         model = linalg.matrix4_translate_f32(pos) * model
         //
-        // program.use(LIGHT_SHADER)
+        // shader.use(LIGHT_SHADER)
     }
 }

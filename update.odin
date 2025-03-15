@@ -8,7 +8,7 @@ import rl "vendor:raylib"
 import "core:math"
 import "core:math/linalg"
 import "core:time"
-import "shader/program"
+import "shader"
 import "core:c"
 
 SPEED :: 0.01

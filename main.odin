@@ -8,7 +8,7 @@ import "base:runtime"
 import rl "vendor:raylib"
 import "core:math"
 import "core:time"
-import "shader/program"
+import "shader"
 
 PROGRAMNAME :: "Program"
 WIDTH :: 1500
@@ -19,14 +19,14 @@ GL_MINOR_VERSION :: 1
 
 WINDOW: glfw.WindowHandle
 
-CUBE_SHADER: program.Program
+CUBE_SHADER: shader.Program
 
 _running: b32 = true
 CONTAINER_VAO: u32
 LIGHT_VAO: u32
 VBO: u32
 // EBO: u32
-TEXTURES: [TextureKind]program.Texture
+TEXTURES: [TextureKind]shader.Texture
 
 TextureKind :: enum {
     wall,

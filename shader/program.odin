@@ -1,4 +1,4 @@
-package program
+package shader
 
 import "core:math/linalg"
 import "core:fmt"
