@@ -39,7 +39,7 @@ update_light :: proc() {
     if is_key_down(glfw.KEY_L) {
         LIGHT_COLOR.b -= 0.1
     }
-    LIGHT_COLOR = linalg.clamp(LIGHT_COLOR, 0, 1)
+    LIGHT_COLOR = linalg.clamp(LIGHT_COLOR, 0, 10)
 
 
     mov: vec3
