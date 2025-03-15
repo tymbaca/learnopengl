@@ -10,10 +10,12 @@ uniform mat4 projection;
 
 out vec3 Normal;
 out vec2 UV;
+out vec3 FragPos; // in world space
 
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
-    UV = aUV;
     Normal = aNormal;
+    UV = aUV;
+    FragPos = vec3(model * vec4(aPos, 1.0));
 }

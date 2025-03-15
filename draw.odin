@@ -23,9 +23,10 @@ cube_positions := []vec3{
     {0,0,4},
 }
 
+LIGHT_POS := vec3{4,4,4}
 LIGHT_COLOR := vec3{0.6, 1, 0.1}
 light_positions := []vec3{
-    {4,4,4},
+    LIGHT_POS,
 }
 
 draw :: proc() {
@@ -66,7 +67,10 @@ draw :: proc() {
 
         shader.set(CUBE_SHADER, "ourTexture1", TEXTURES[.wall].id)
         shader.set(CUBE_SHADER, "ourTexture2", i32(1))
+
         shader.set(CUBE_SHADER, "ambientLight", global_light)
+        shader.set(CUBE_SHADER, "lightPos", LIGHT_POS)
+        shader.set(CUBE_SHADER, "lightColor", LIGHT_COLOR)
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
