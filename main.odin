@@ -10,6 +10,10 @@ import "core:math"
 import "core:time"
 import "shader"
 
+import im "lib/imgui"
+import "lib/imgui/imgui_impl_glfw"
+import "lib/imgui/imgui_impl_opengl3"
+
 PROGRAMNAME :: "Program"
 WIDTH :: 1500
 HEIGHT :: 700
@@ -72,10 +76,23 @@ main :: proc() {
 	glfw.SetKeyCallback(WINDOW, key_callback)
 	glfw.SetFramebufferSizeCallback(WINDOW, size_callback)
 
-    glfw.SetInputMode(WINDOW, glfw.CURSOR, glfw.CURSOR_DISABLED)
-    glfw.SetCursorPosCallback(WINDOW, mouse_callback)
+    // glfw.SetInputMode(WINDOW, glfw.CURSOR, glfw.CURSOR_DISABLED)
+    // glfw.SetCursorPosCallback(WINDOW, mouse_callback)
 
 	gl.load_up_to(int(GL_MAJOR_VERSION), GL_MINOR_VERSION, glfw.gl_set_proc_address)
+
+	im.CHECKVERSION()
+	im.CreateContext()
+	defer im.DestroyContext()
+	io := im.GetIO()
+	io.ConfigFlags += {.NavEnableKeyboard, .NavEnableGamepad}
+
+	im.StyleColorsDark()
+
+	imgui_impl_glfw.InitForOpenGL(WINDOW, true)
+	defer imgui_impl_glfw.Shutdown()
+	imgui_impl_opengl3.Init("#version 150")
+	defer imgui_impl_opengl3.Shutdown()
 
 	if ok := init(); !ok {
         fmt.println("can't init")
@@ -90,6 +107,20 @@ main :: proc() {
         MOUSE_DELTA = _MOUSE_DELTA
         _MOUSE_DELTA = {}
 
+		imgui_impl_opengl3.NewFrame()
+		imgui_impl_glfw.NewFrame()
+		im.NewFrame()
+
+		im.ShowDemoWindow()
+
+		if im.Begin("Window containing a quit button") {
+			if im.Button("The quit button in question") {
+				glfw.SetWindowShouldClose(WINDOW, true)
+			}
+		}
+		im.End()
+		im.Render()
+
         delta := f32(time.duration_milliseconds(time.since(last_frate)))
         last_frate = time.now()
 
@@ -97,6 +128,8 @@ main :: proc() {
 
 		update(delta)
 		draw()
+
+		imgui_impl_opengl3.RenderDrawData(im.GetDrawData())
 
 		glfw.SwapBuffers((WINDOW))
 	}

@@ -40,13 +40,13 @@ Camera :: struct {
     look_at: Maybe(vec3),
     dir: vec3, // local for pos
 }
+//
+// Model :: struct {
+//     vertices: []Vertex_Attributes,
+//     material: Material,
+// }
 
-Model :: struct {
-    vertices: []Vertex_Attributes,
-    material: Material,
-}
-
-Material :: struct {
-    ambient: vec3,
-
-}
+// Material :: struct {
+//     ambient: vec3,
+//    
+// }
