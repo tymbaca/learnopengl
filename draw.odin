@@ -72,6 +72,33 @@ draw :: proc() {
         shader.set(CUBE_SHADER, "ambientLight", global_light)
         shader.set(CUBE_SHADER, "lightPos", LIGHT_POS)
         shader.set(CUBE_SHADER, "lightColor", LIGHT_COLOR)
+        shader.set(CUBE_SHADER, "viewPos", CAMERA.pos)
+
+        gl.DrawArrays(gl.TRIANGLES, 0, 36)
+    }
+
+    // plane
+    {
+        gl.BindVertexArray(CONTAINER_VAO)
+        model := linalg.identity_matrix(mat4)
+        model = linalg.matrix4_scale_f32({20, 1, 20}) * model
+        // model = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG*10, vec3{1,0,0}) * model
+        model = linalg.matrix4_translate_f32({0, -3, 0}) * model
+
+        shader.use(CUBE_SHADER)
+
+        shader.set(CUBE_SHADER, "modelMat", model)
+        shader.set(CUBE_SHADER, "normalMat", mat3(linalg.transpose(linalg.inverse(model))))
+        shader.set(CUBE_SHADER, "viewMat", view)
+        shader.set(CUBE_SHADER, "projectionMat", projection)
+
+        shader.set(CUBE_SHADER, "ourTexture1", TEXTURES[.wall].id)
+        shader.set(CUBE_SHADER, "ourTexture2", i32(1))
+
+        shader.set(CUBE_SHADER, "ambientLight", global_light)
+        shader.set(CUBE_SHADER, "lightPos", LIGHT_POS)
+        shader.set(CUBE_SHADER, "lightColor", LIGHT_COLOR)
+        shader.set(CUBE_SHADER, "viewPos", CAMERA.pos)
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
