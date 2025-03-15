@@ -15,7 +15,7 @@ out vec3 FragPos; // in world space
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
-    Normal = aNormal; // TODO: maybe apply rotation?
+    Normal = mat3(transpose(inverse(model))) * aNormal;
     UV = aUV;
     FragPos = vec3(model * vec4(aPos, 1.0));
 }

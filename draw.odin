@@ -55,7 +55,7 @@ draw :: proc() {
     for pos in cube_positions {
         gl.BindVertexArray(CONTAINER_VAO)
         model := linalg.identity_matrix(mat4)
-        model = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG, vec3{1,0,0}) * model
+        model = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG*10, vec3{1,0,0}) * model
         model = linalg.matrix4_translate_f32(pos) * model
 
 
