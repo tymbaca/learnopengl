@@ -85,16 +85,10 @@ main :: proc() {
     gl.Enable(gl.DEPTH_TEST)
 
     last_frate := time.now()
-    prev_mouse := MOUSE_POS
 	for (!glfw.WindowShouldClose(WINDOW) && _running) {
-        prev_mouse = MOUSE_POS
-        if MOUSE_FIRST {
-            MOUSE_FIRST = false
-            prev_mouse = MOUSE_POS
-        } 
 		glfw.PollEvents()
-        MOUSE_DELTA = MOUSE_POS - prev_mouse
-
+        MOUSE_DELTA = _MOUSE_DELTA
+        _MOUSE_DELTA = {}
 
         delta := f32(time.duration_milliseconds(time.since(last_frate)))
         last_frate = time.now()
@@ -108,7 +102,6 @@ main :: proc() {
 	}
 
 	exit()
-
 }
 
 
@@ -130,9 +123,19 @@ size_callback :: proc "c" (window: glfw.WindowHandle, width, height: i32) {
 	gl.Viewport(0, 0, width, height)
 }
 
-MOUSE_POS: vec2
+// TODO:
 MOUSE_DELTA: vec2
-MOUSE_FIRST := true
+_MOUSE_POS: vec2
+_MOUSE_LAST: vec2
+_MOUSE_DELTA: vec2
+_MOUSE_FIRST := true
 mouse_callback :: proc "c" (window: glfw.WindowHandle, xpos,  ypos: f64) {
-    MOUSE_POS = {f32(xpos), f32(ypos)}
+    _MOUSE_POS = {f32(xpos), f32(ypos)}
+    if _MOUSE_FIRST {
+        _MOUSE_FIRST = false
+        _MOUSE_LAST = _MOUSE_POS
+    }
+
+    _MOUSE_DELTA = _MOUSE_POS - _MOUSE_LAST
+    _MOUSE_LAST = _MOUSE_POS
 }
