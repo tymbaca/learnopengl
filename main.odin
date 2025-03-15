@@ -19,12 +19,11 @@ GL_MINOR_VERSION :: 1
 
 WINDOW: glfw.WindowHandle
 
-VERTEX_SHADER :: "shader/vertex.glsl"
-FRAGMENT_SHADER :: "shader/fragment.glsl"
-PROGRAM: program.Program
+CUBE_SHADER: program.Program
 
 _running: b32 = true
-VAO: u32
+CONTAINER_VAO: u32
+LIGHT_VAO: u32
 VBO: u32
 // EBO: u32
 TEXTURES: [TextureKind]program.Texture

@@ -23,6 +23,10 @@ cube_positions := []vec3{
     {0,0,4},
 }
 
+light_positions := []vec3{
+    {4,4,4},
+}
+
 draw :: proc() {
 	// Set the opengl clear color
 	// 0-1 rgba values
@@ -36,37 +40,34 @@ draw :: proc() {
     gl.ActiveTexture(gl.TEXTURE1)
     gl.BindTexture(gl.TEXTURE_2D, TEXTURES[.awesomeface].id)
 
-    program.use(PROGRAM)
 
     global_time := f32(time.duration_seconds(time.since(START)))
     // factor := math.sin(time.duration_seconds(time.since(START)))
     factor := 1
 
+    w, h := glfw.GetWindowSize(WINDOW)
+    projection := linalg.matrix4_perspective_f32(65*RAD_PER_DEG, f32(w)/f32(h), 0.1, 100)
+    view := linalg.matrix4_look_at_f32(CAMERA.pos, (CAMERA.dir + CAMERA.pos), CAMERA.up)
+
     for pos in cube_positions {
-        gl.BindVertexArray(VAO)
+        gl.BindVertexArray(CONTAINER_VAO)
         model := linalg.identity_matrix(mat4)
         model = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG, vec3{1,0,0}) * model
         model = linalg.matrix4_translate_f32(pos) * model
 
-        // view := linalg.identity_matrix(mat4)
-        // camera_right := normalize(cross(UP, CAMERA.dir))
-        // camera_up := cross(CAMERA.dir, camera_right)
-        view := linalg.matrix4_look_at_f32(CAMERA.pos, (CAMERA.dir + CAMERA.pos), CAMERA.up)
-        // view = linalg.matrix4_rotate_f32(global_time * math.RAD_PER_DEG, {0, 1, 0}) * view
-        // view = linalg.matrix4_translate_f32(CAMERA.pos * {1, 1, -1}) * view
 
-        // radius :: 10
-        // cam_x := sin(global_time) * radius
-        // cam_z := cos(global_time) * radius
-        // view := linalg.matrix4_look_at_f32({cam_x, 0, cam_z}, {0,0,0}, UP)
-
-        w, h := glfw.GetWindowSize(WINDOW)
-        projection := linalg.matrix4_perspective_f32(65*RAD_PER_DEG, f32(w)/f32(h), 0.1, 100)
-
-        program.set(PROGRAM, "model", model)
-        program.set(PROGRAM, "view", view)
-        program.set(PROGRAM, "projection", projection)
-
+        program.use(CUBE_SHADER)
+        program.set(CUBE_SHADER, "model", model)
+        program.set(CUBE_SHADER, "view", view)
+        program.set(CUBE_SHADER, "projection", projection)
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
+    }
+
+    for pos in light_positions {
+        model := linalg.identity(mat4)
+        model = linalg.matrix4_scale_f32({0.4, 0.4, 0.4}) * model
+        model = linalg.matrix4_translate_f32(pos) * model
+        //
+        // program.use(LIGHT_SHADER)
     }
 }

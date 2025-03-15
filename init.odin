@@ -21,7 +21,7 @@ init :: proc() -> (ok: bool) {
     TEXTURES[.container]   = program.load_texture("resources/container.png") or_return
     TEXTURES[.awesomeface] = program.load_texture("resources/awesomeface.png") or_return
 
-	PROGRAM = program.new(VERTEX_SHADER, FRAGMENT_SHADER) or_return
+	CUBE_SHADER = program.new("shader/cube.vs", "shader/cube.fs") or_return
 
 	// Own drawing code here
 	vs := slice.reinterpret([]Vertex_Attributes, []f32{
@@ -71,31 +71,31 @@ init :: proc() -> (ok: bool) {
 	stride :: size_of(Vertex_Attributes)
     fmt.println("attr size ", size_of(Vertex_Attributes))
 
-	gl.GenVertexArrays(1, &VAO)
-	gl.GenBuffers(1, &VBO)
-
-	gl.BindVertexArray(VAO)
 
 	fmt.println(size_of(f32) * len(vs))
+	gl.GenBuffers(1, &VBO)
 	gl.BindBuffer(gl.ARRAY_BUFFER, VBO)
 	gl.BufferData(gl.ARRAY_BUFFER, size_of(Vertex_Attributes) * len(vs), raw_data(vs), gl.STATIC_DRAW)
 
+	gl.GenVertexArrays(1, &CONTAINER_VAO)
+	gl.BindVertexArray(CONTAINER_VAO)
 	posLoc :: 0
 	gl.VertexAttribPointer(posLoc, 3, gl.FLOAT, false, stride, 0)
 	gl.EnableVertexAttribArray(posLoc)
-
 	uvLoc :: 1
 	gl.VertexAttribPointer(uvLoc, 2, gl.FLOAT, false, stride, 3 * size_of(f32))
 	gl.EnableVertexAttribArray(uvLoc)
 
-	// gl.BindBuffer(gl.ARRAY_BUFFER, 0)
-	// gl.BindVertexArray(0)
+    gl.GenVertexArrays(1, &LIGHT_VAO)
+    gl.BindVertexArray(LIGHT_VAO)
+	gl.VertexAttribPointer(posLoc, 3, gl.FLOAT, false, stride, 0)
+	gl.EnableVertexAttribArray(posLoc)
 
-	// gl.PolygonMode(gl.FRONT_AND_BACK, gl.LINE)
-
-    program.use(PROGRAM)
-    program.set(PROGRAM, "ourTexture1", i32(0))
-    program.set(PROGRAM, "ourTexture2", i32(1))
+    program.use(CUBE_SHADER)
+    program.set(CUBE_SHADER, "ourTexture1", i32(0))
+    program.set(CUBE_SHADER, "ourTexture2", i32(1))
+    program.set(CUBE_SHADER, "cubeColor", vec3{1.0, 0.5, 0.31})
+    program.set(CUBE_SHADER, "lightColor", vec3{1.0, 1.0, 1.0})
     
 
 	return true
