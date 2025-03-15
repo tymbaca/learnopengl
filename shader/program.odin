@@ -45,6 +45,8 @@ set :: proc(p: Program, name: cstring, val: $T) {
         gl.Uniform1i(loc, val)
     } else when T == matrix[4,4]f32 {
         gl.UniformMatrix4fv(loc, 1, false, cast([^]f32)(&val))
+    } else when T == matrix[3,3]f32 {
+        gl.UniformMatrix3fv(loc, 1, false, cast([^]f32)(&val))
     }
 }
 

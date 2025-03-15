@@ -18,6 +18,7 @@ vec2 :: [2]f32
 vec3 :: [3]f32
 vec4 :: [4]f32
 mat4 :: matrix[4, 4]f32
+mat3 :: matrix[3, 3]f32
 
 to_vec4 :: proc(vec: vec3) -> vec4 {
     return {vec.x, vec.y, vec.z, 1}

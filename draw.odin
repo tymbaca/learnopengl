@@ -61,9 +61,10 @@ draw :: proc() {
 
         shader.use(CUBE_SHADER)
 
-        shader.set(CUBE_SHADER, "model", model)
-        shader.set(CUBE_SHADER, "view", view)
-        shader.set(CUBE_SHADER, "projection", projection)
+        shader.set(CUBE_SHADER, "modelMat", model)
+        shader.set(CUBE_SHADER, "normalMat", mat3(linalg.transpose(linalg.inverse(model))))
+        shader.set(CUBE_SHADER, "viewMat", view)
+        shader.set(CUBE_SHADER, "projectionMat", projection)
 
         shader.set(CUBE_SHADER, "ourTexture1", TEXTURES[.wall].id)
         shader.set(CUBE_SHADER, "ourTexture2", i32(1))
@@ -82,9 +83,9 @@ draw :: proc() {
         model = linalg.matrix4_translate_f32(pos) * model
         
         shader.use(LIGHT_SHADER)
-        shader.set(LIGHT_SHADER, "model", model)
-        shader.set(LIGHT_SHADER, "view", view)
-        shader.set(LIGHT_SHADER, "projection", projection)
+        shader.set(LIGHT_SHADER, "modelMat", model)
+        shader.set(LIGHT_SHADER, "viewMat", view)
+        shader.set(LIGHT_SHADER, "projectionMat", projection)
 
         shader.set(LIGHT_SHADER, "color", LIGHT_COLOR)
 
