@@ -1,6 +1,7 @@
 #version 410 core
 
-in vec2 uv;
+in vec3 Normal;
+in vec2 UV;
 
 out vec4 FragColor;
 
@@ -10,5 +11,5 @@ uniform vec3 ambientLight;
 
 void main()
 {
-    FragColor = mix(texture(ourTexture1, uv), texture(ourTexture2, uv), 0.5) * vec4(ambientLight, 1);
+    FragColor = mix(texture(ourTexture1, UV), texture(ourTexture2, UV), 0.5) * vec4(ambientLight, 1);
 }

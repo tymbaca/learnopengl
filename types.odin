@@ -26,12 +26,13 @@ to_vec4 :: proc(vec: vec3) -> vec4 {
 UP :: vec3{0,1,0}
 
 Vertex_Attributes :: struct {
-	pos:   vec3,
-	uv:    vec2,
+	pos: vec3,
+    n:   vec3,
+	uv:  vec2,
 }
 
 Camera :: struct {
-    up: vec3, // {0,1,0} for default
+    up:  vec3, // {0,1,0} for default
     pos: vec3,
     yaw, pitch: f32,
     // calculated
