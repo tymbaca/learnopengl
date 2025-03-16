@@ -57,8 +57,21 @@ update_light :: proc() {
     LIGHT_POS += mov * SPEED * 5
 }
 
+mouse_first_pos := true
+last_mouse_pos: vec2
+delta_mouse: vec2
+
 update_camera :: proc(cam: ^Camera, delta: f32) {
     cam.dir = normalize(cam.dir)
+
+    new_mouse_pos := get_mouse_pos()
+    if !mouse_first_pos {
+        delta_mouse = new_mouse_pos - last_mouse_pos
+    } else {
+        mouse_first_pos = false
+    }
+    last_mouse_pos = new_mouse_pos
+    fmt.println(last_mouse_pos, new_mouse_pos, delta_mouse)
 
     @(static) cursor := true
     if is_key_down(glfw.KEY_LEFT_BRACKET) {
@@ -68,8 +81,7 @@ update_camera :: proc(cam: ^Camera, delta: f32) {
         cursor = true
     }
     glfw.SetInputMode(WINDOW, glfw.CURSOR, glfw.CURSOR_NORMAL if cursor else glfw.CURSOR_DISABLED)
-    // glfw.SetCursorPosCallback(WINDOW, mouse_callback)
-
+    
     mov: vec3
     if is_key_down(glfw.KEY_W) {
         mov += cam.dir
@@ -91,8 +103,8 @@ update_camera :: proc(cam: ^Camera, delta: f32) {
     }
 
 
-    cam.yaw += MOUSE_DELTA.x * MOUSE_SENSITIVITY
-    cam.pitch -= MOUSE_DELTA.y * MOUSE_SENSITIVITY
+    cam.yaw += delta_mouse.x * MOUSE_SENSITIVITY
+    cam.pitch -= delta_mouse.y * MOUSE_SENSITIVITY
     if cam.pitch > 89 {cam.pitch = 89}
     if cam.pitch < -89 {cam.pitch = -89}
     // fmt.println(cam.pitch, cam.yaw)
@@ -121,4 +133,9 @@ is_key_down :: proc(key: c.int) -> bool {
 is_key_released :: proc(key: c.int) -> bool {
     state := glfw.GetKey(WINDOW, key)
     return state == glfw.RELEASE
+}
+
+get_mouse_pos :: proc() -> vec2 {
+    x, y := glfw.GetCursorPos(WINDOW)
+    return {f32(x), f32(y)}
 }
