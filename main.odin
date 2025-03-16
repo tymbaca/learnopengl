@@ -76,9 +76,6 @@ main :: proc() {
 	glfw.SetKeyCallback(WINDOW, key_callback)
 	glfw.SetFramebufferSizeCallback(WINDOW, size_callback)
 
-    // glfw.SetInputMode(WINDOW, glfw.CURSOR, glfw.CURSOR_DISABLED)
-    // glfw.SetCursorPosCallback(WINDOW, mouse_callback)
-
 	gl.load_up_to(int(GL_MAJOR_VERSION), GL_MINOR_VERSION, glfw.gl_set_proc_address)
 
 	im.CHECKVERSION()
@@ -91,7 +88,7 @@ main :: proc() {
 
 	imgui_impl_glfw.InitForOpenGL(WINDOW, true)
 	defer imgui_impl_glfw.Shutdown()
-	imgui_impl_opengl3.Init("#version 150")
+	imgui_impl_opengl3.Init("#version 410")
 	defer imgui_impl_opengl3.Shutdown()
 
 	if ok := init(); !ok {

@@ -60,6 +60,16 @@ update_light :: proc() {
 update_camera :: proc(cam: ^Camera, delta: f32) {
     cam.dir = normalize(cam.dir)
 
+    @(static) cursor := true
+    if is_key_down(glfw.KEY_LEFT_BRACKET) {
+        cursor = false
+    }
+    if is_key_down(glfw.KEY_RIGHT_BRACKET) {
+        cursor = true
+    }
+    glfw.SetInputMode(WINDOW, glfw.CURSOR, glfw.CURSOR_NORMAL if cursor else glfw.CURSOR_DISABLED)
+    // glfw.SetCursorPosCallback(WINDOW, mouse_callback)
+
     mov: vec3
     if is_key_down(glfw.KEY_W) {
         mov += cam.dir
@@ -106,4 +116,9 @@ update_camera :: proc(cam: ^Camera, delta: f32) {
 is_key_down :: proc(key: c.int) -> bool {
     state := glfw.GetKey(WINDOW, key)
     return state == glfw.PRESS || state == glfw.REPEAT
+}
+
+is_key_released :: proc(key: c.int) -> bool {
+    state := glfw.GetKey(WINDOW, key)
+    return state == glfw.RELEASE
 }
