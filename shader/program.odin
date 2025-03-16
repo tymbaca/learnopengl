@@ -35,6 +35,8 @@ set :: proc(p: Program, name: cstring, val: $T) {
 
     when T == f32 {
         gl.Uniform1f(loc, val)
+    } else when T == bool {
+        gl.Uniform1i(loc, 1 if val else 0)
     } else when T == [2]f32 {
         gl.Uniform2f(loc, val.x, val.y)
     } else when T == [3]f32 {

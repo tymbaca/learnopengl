@@ -54,10 +54,9 @@ void main()
 {
     vec4 albedo = texture(material.diffuse, UV);
     vec3 specularFactor = vec3(texture(material.specular, UV));
-    // if (!useSpec) {
-    //     specularFactor = vec3(0.5);
-    // }
-    // specularFactor = vec3(1);
+    if (!useSpec) {
+        specularFactor = vec3(1);
+    }
 
     vec4 ambientLight = vec4(ambientLight, 1);
     vec4 diffuseLight = getDiffuse(FragPos, Normal, lightPos, lightColor);
