@@ -57,7 +57,7 @@ void main()
     // if (!useSpec) {
     //     specularFactor = vec3(0.5);
     // }
-    // specularFactor *= 0.4;
+    // specularFactor = vec3(1);
 
     vec4 ambientLight = vec4(ambientLight, 1);
     vec4 diffuseLight = getDiffuse(FragPos, Normal, lightPos, lightColor);
