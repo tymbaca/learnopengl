@@ -71,7 +71,6 @@ update_camera :: proc(cam: ^Camera, delta: f32) {
         mouse_first_pos = false
     }
     last_mouse_pos = new_mouse_pos
-    fmt.println(last_mouse_pos, new_mouse_pos, delta_mouse)
 
     @(static) cursor := true
     if is_key_down(glfw.KEY_LEFT_BRACKET) {
@@ -103,11 +102,12 @@ update_camera :: proc(cam: ^Camera, delta: f32) {
     }
 
 
-    cam.yaw += delta_mouse.x * MOUSE_SENSITIVITY
-    cam.pitch -= delta_mouse.y * MOUSE_SENSITIVITY
-    if cam.pitch > 89 {cam.pitch = 89}
-    if cam.pitch < -89 {cam.pitch = -89}
-    // fmt.println(cam.pitch, cam.yaw)
+    if !cursor {
+        cam.yaw += delta_mouse.x * MOUSE_SENSITIVITY
+        cam.pitch -= delta_mouse.y * MOUSE_SENSITIVITY
+        if cam.pitch > 89 {cam.pitch = 89}
+        if cam.pitch < -89 {cam.pitch = -89}
+    }
 
     cam.pos += mov * SPEED * delta
 

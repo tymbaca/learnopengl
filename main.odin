@@ -101,31 +101,21 @@ main :: proc() {
     last_frate := time.now()
 	for (!glfw.WindowShouldClose(WINDOW) && _running) {
 		glfw.PollEvents()
-        MOUSE_DELTA = _MOUSE_DELTA
-        _MOUSE_DELTA = {}
+        gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 		imgui_impl_opengl3.NewFrame()
 		imgui_impl_glfw.NewFrame()
 		im.NewFrame()
 
-		im.ShowDemoWindow()
+		// im.ShowDemoWindow()
 
-		if im.Begin("Window containing a quit button") {
-			if im.Button("The quit button in question") {
-				glfw.SetWindowShouldClose(WINDOW, true)
-			}
-		}
-		im.End()
-		im.Render()
 
         delta := f32(time.duration_milliseconds(time.since(last_frate)))
         last_frate = time.now()
-
-        gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
 		update(delta)
 		draw()
 
+		im.Render()
 		imgui_impl_opengl3.RenderDrawData(im.GetDrawData())
 
 		glfw.SwapBuffers((WINDOW))
@@ -153,19 +143,3 @@ size_callback :: proc "c" (window: glfw.WindowHandle, width, height: i32) {
 	gl.Viewport(0, 0, width, height)
 }
 
-// TODO:
-MOUSE_DELTA: vec2
-_MOUSE_POS: vec2
-_MOUSE_LAST: vec2
-_MOUSE_DELTA: vec2
-_MOUSE_FIRST := true
-mouse_callback :: proc "c" (window: glfw.WindowHandle, xpos,  ypos: f64) {
-    _MOUSE_POS = {f32(xpos), f32(ypos)}
-    if _MOUSE_FIRST {
-        _MOUSE_FIRST = false
-        _MOUSE_LAST = _MOUSE_POS
-    }
-
-    _MOUSE_DELTA = _MOUSE_POS - _MOUSE_LAST
-    _MOUSE_LAST = _MOUSE_POS
-}

@@ -1,5 +1,6 @@
 package main
 
+import im "lib/imgui"
 import "core:fmt"
 import "core:c"
 import gl "vendor:OpenGL"
@@ -118,4 +119,11 @@ draw :: proc() {
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
+
+    if im.Begin("Window containing a quit button") {
+        if im.Button("The quit button in question") {
+            glfw.SetWindowShouldClose(WINDOW, true)
+        }
+    }
+    im.End()
 }
