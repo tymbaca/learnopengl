@@ -20,6 +20,8 @@ init :: proc() -> (ok: bool) {
     TEXTURES[.wall]        = shader.load_texture("resources/wall.png") or_return
     TEXTURES[.container]   = shader.load_texture("resources/container.png") or_return
     TEXTURES[.awesomeface] = shader.load_texture("resources/awesomeface.png") or_return
+    TEXTURES[.metall_container] = shader.load_texture("resources/container2.png") or_return
+    TEXTURES[.metall_container_spec] = shader.load_texture("resources/container2_specular.png") or_return
 
 	CUBE_SHADER = shader.new("resources/shader/cube.vs", "resources/shader/cube.fs") or_return
 	LIGHT_SHADER = shader.new("resources/shader/light.vs", "resources/shader/light.fs") or_return

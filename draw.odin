@@ -30,6 +30,9 @@ light_positions := []vec3{
     LIGHT_POS,
 }
 
+SHININESS: f32 = 64
+USE_SPEC: bool = true
+
 draw :: proc() {
 	// Set the opengl clear color
 	// 0-1 rgba values
@@ -38,12 +41,10 @@ draw :: proc() {
 	// Clear the screen with the set clearcolor
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 
-
     gl.ActiveTexture(gl.TEXTURE0)
-    gl.BindTexture(gl.TEXTURE_2D, TEXTURES[.wall].id)
+    gl.BindTexture(gl.TEXTURE_2D, TEXTURES[.metall_container_spec].id)
     gl.ActiveTexture(gl.TEXTURE1)
-    gl.BindTexture(gl.TEXTURE_2D, TEXTURES[.awesomeface].id)
-
+    gl.BindTexture(gl.TEXTURE_2D, TEXTURES[.metall_container].id)
 
     global_time := f32(time.duration_seconds(time.since(START)))
     // factor := math.sin(time.duration_seconds(time.since(START)))
@@ -67,13 +68,16 @@ draw :: proc() {
         shader.set(CUBE_SHADER, "viewMat", view)
         shader.set(CUBE_SHADER, "projectionMat", projection)
 
-        shader.set(CUBE_SHADER, "ourTexture1", TEXTURES[.wall].id)
-        shader.set(CUBE_SHADER, "ourTexture2", i32(1))
-
         shader.set(CUBE_SHADER, "ambientLight", global_light)
         shader.set(CUBE_SHADER, "lightPos", LIGHT_POS)
         shader.set(CUBE_SHADER, "lightColor", LIGHT_COLOR)
         shader.set(CUBE_SHADER, "viewPos", CAMERA.pos)
+
+        shader.set(CUBE_SHADER, "material.diffuse", i32(1))
+        shader.set(CUBE_SHADER, "material.specular", i32(0))
+        shader.set(CUBE_SHADER, "material.shininess", SHININESS)
+        shader.set(CUBE_SHADER, "useSpec", USE_SPEC)
+
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
@@ -93,13 +97,15 @@ draw :: proc() {
         shader.set(CUBE_SHADER, "viewMat", view)
         shader.set(CUBE_SHADER, "projectionMat", projection)
 
-        shader.set(CUBE_SHADER, "ourTexture1", TEXTURES[.wall].id)
-        shader.set(CUBE_SHADER, "ourTexture2", i32(1))
-
         shader.set(CUBE_SHADER, "ambientLight", global_light)
         shader.set(CUBE_SHADER, "lightPos", LIGHT_POS)
         shader.set(CUBE_SHADER, "lightColor", LIGHT_COLOR)
         shader.set(CUBE_SHADER, "viewPos", CAMERA.pos)
+
+        shader.set(CUBE_SHADER, "material.diffuse", i32(1))
+        shader.set(CUBE_SHADER, "material.specular", i32(0))
+        shader.set(CUBE_SHADER, "material.shininess", SHININESS)
+        shader.set(CUBE_SHADER, "useSpec", USE_SPEC)
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }

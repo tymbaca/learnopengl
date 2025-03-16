@@ -37,6 +37,9 @@ TextureKind :: enum {
     wall,
     container,
     awesomeface,
+    
+    metall_container,
+    metall_container_spec,
 }
 
 CAMERA := Camera{

@@ -1,5 +1,6 @@
 package main
 
+import im "lib/imgui"
 import "core:fmt"
 import gl "vendor:OpenGL"
 import "vendor:glfw"
@@ -16,8 +17,16 @@ ROT_SPEED :: 0.002
 MOUSE_SENSITIVITY :: 0.3
 
 update :: proc(delta: f32) {
+    update_stuff()
     update_camera(&CAMERA, delta)
     update_light()
+}
+
+update_stuff :: proc() {
+    im.Begin("stuff")
+    im.SliderFloat("shininess", &SHININESS, 0, 256)
+    im.Checkbox("use_spec", &USE_SPEC)
+    im.End()
 }
 
 update_light :: proc() {
@@ -57,6 +66,7 @@ update_light :: proc() {
     LIGHT_POS += mov * SPEED * 5
 }
 
+cursor := false
 mouse_first_pos := true
 last_mouse_pos: vec2
 delta_mouse: vec2
@@ -72,11 +82,10 @@ update_camera :: proc(cam: ^Camera, delta: f32) {
     }
     last_mouse_pos = new_mouse_pos
 
-    @(static) cursor := true
-    if is_key_down(glfw.KEY_LEFT_BRACKET) {
+    if is_key_down(glfw.KEY_Q) {
         cursor = false
     }
-    if is_key_down(glfw.KEY_RIGHT_BRACKET) {
+    if is_key_down(glfw.KEY_E) {
         cursor = true
     }
     glfw.SetInputMode(WINDOW, glfw.CURSOR, glfw.CURSOR_NORMAL if cursor else glfw.CURSOR_DISABLED)
