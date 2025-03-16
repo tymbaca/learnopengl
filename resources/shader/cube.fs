@@ -31,8 +31,7 @@ vec4 getDiffuse(vec3 fragPos, vec3 normal, vec3 lightPos, vec3 lightColor)
     factor = max(factor, 0.0); // so that dark side will remain ambient (not become more dark)
     vec3 resultLight = lightColor * factor * 5;
 
-    // TODO:
-    // resultLight /= distance;
+    resultLight /= distance;
 
     return vec4(resultLight, 1.0);
 }
@@ -62,5 +61,5 @@ void main()
     vec4 diffuseLight = getDiffuse(FragPos, Normal, lightPos, lightColor);
     vec4 specularLight = getSpecular(FragPos, Normal, lightPos, lightColor, viewPos, specularFactor, material.shininess);
 
-    FragColor = (ambientLight /*+ diffuseLight*/ + specularLight) * albedo;
+    FragColor = (ambientLight + diffuseLight + specularLight) * albedo;
 }
