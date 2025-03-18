@@ -12,20 +12,26 @@ import "core:math/linalg"
 import "core:time"
 import "shader"
 
-cube_positions := []vec3{
-    {0,0,0},
-    // {2,0,0},
-    // {2,1,0},
-    // {-4,1,0},
-    // {-4,-3,0},
+cubes := []Cube{
+    {pos = {0,-3,0}, scale = {20, 1, 20}},
 
-    {2,0,0},
-    {0,2,0},
-    {0,0,4},
+    {pos = {0,0,0}, scale = {1,1,1}},
+    {pos = {2,0,0}, scale = {1,1,1}},
+    {pos = {0,2,0}, scale = {1,1,1}},
+    {pos = {0,0,4}, scale = {1,1,1}},
+}
+
+Cube :: struct {
+    pos: vec3,
+    scale: vec3,
 }
 
 LIGHT_POS := vec3{4,4,4}
-LIGHT_COLOR := vec3{0.6, 1, 0.1}
+
+LIGHT_DIFFUSE := vec3{0.6, 1, 0.1}
+LIGHT_AMBIENT := LIGHT_DIFFUSE * 0.1
+LIGHT_SPECULAR := LIGHT_DIFFUSE
+
 light_positions := []vec3{
     LIGHT_POS,
 }
@@ -36,8 +42,7 @@ USE_SPEC: bool = true
 draw :: proc() {
 	// Set the opengl clear color
 	// 0-1 rgba values
-    global_light := LIGHT_COLOR * 0.1
-	gl.ClearColor(global_light.r, global_light.g, global_light.b, 1.0)
+	gl.ClearColor(LIGHT_AMBIENT.r, LIGHT_AMBIENT.g, LIGHT_AMBIENT.b, 1.0)
 	// Clear the screen with the set clearcolor
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 
@@ -54,41 +59,13 @@ draw :: proc() {
     projection := linalg.matrix4_perspective_f32(65*RAD_PER_DEG, f32(w)/f32(h), 0.1, 100)
     view := linalg.matrix4_look_at_f32(CAMERA.pos, (CAMERA.dir + CAMERA.pos), CAMERA.up)
 
-    for pos in cube_positions {
+    for cube in cubes {
         gl.BindVertexArray(CONTAINER_VAO)
         model := linalg.identity_matrix(mat4)
-        model = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG*10, vec3{1,0,0}) * model
-        model = linalg.matrix4_translate_f32(pos) * model
-
-
-        shader.use(CUBE_SHADER)
-
-        shader.set(CUBE_SHADER, "modelMat", model)
-        shader.set(CUBE_SHADER, "normalMat", mat3(linalg.transpose(linalg.inverse(model))))
-        shader.set(CUBE_SHADER, "viewMat", view)
-        shader.set(CUBE_SHADER, "projectionMat", projection)
-
-        shader.set(CUBE_SHADER, "ambientLight", global_light)
-        shader.set(CUBE_SHADER, "lightPos", LIGHT_POS)
-        shader.set(CUBE_SHADER, "lightColor", LIGHT_COLOR)
-        shader.set(CUBE_SHADER, "viewPos", CAMERA.pos)
-
-        shader.set(CUBE_SHADER, "material.diffuse", i32(1))
-        shader.set(CUBE_SHADER, "material.specular", i32(0))
-        shader.set(CUBE_SHADER, "material.shininess", SHININESS)
-        shader.set(CUBE_SHADER, "useSpec", USE_SPEC)
-
-
-        gl.DrawArrays(gl.TRIANGLES, 0, 36)
-    }
-
-    // plane
-    {
-        gl.BindVertexArray(CONTAINER_VAO)
-        model := linalg.identity_matrix(mat4)
-        model = linalg.matrix4_scale_f32({20, 1, 20}) * model
+        model = linalg.matrix4_scale_f32(cube.scale) * model
         // model = linalg.matrix4_rotate_f32(global_time*RAD_PER_DEG*10, vec3{1,0,0}) * model
-        model = linalg.matrix4_translate_f32({0, -3, 0}) * model
+        model = linalg.matrix4_translate_f32(cube.pos) * model
+
 
         shader.use(CUBE_SHADER)
 
@@ -97,15 +74,17 @@ draw :: proc() {
         shader.set(CUBE_SHADER, "viewMat", view)
         shader.set(CUBE_SHADER, "projectionMat", projection)
 
-        shader.set(CUBE_SHADER, "ambientLight", global_light)
-        shader.set(CUBE_SHADER, "lightPos", LIGHT_POS)
-        shader.set(CUBE_SHADER, "lightColor", LIGHT_COLOR)
+        shader.set(CUBE_SHADER, "light.ambient", LIGHT_AMBIENT)
+        shader.set(CUBE_SHADER, "light.position", LIGHT_POS)
+        shader.set(CUBE_SHADER, "light.diffuse", LIGHT_DIFFUSE)
+        shader.set(CUBE_SHADER, "light.specular", LIGHT_SPECULAR)
         shader.set(CUBE_SHADER, "viewPos", CAMERA.pos)
 
         shader.set(CUBE_SHADER, "material.diffuse", i32(1))
         shader.set(CUBE_SHADER, "material.specular", i32(0))
         shader.set(CUBE_SHADER, "material.shininess", SHININESS)
         shader.set(CUBE_SHADER, "useSpec", USE_SPEC)
+
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
@@ -121,7 +100,7 @@ draw :: proc() {
         shader.set(LIGHT_SHADER, "viewMat", view)
         shader.set(LIGHT_SHADER, "projectionMat", projection)
 
-        shader.set(LIGHT_SHADER, "color", LIGHT_COLOR)
+        shader.set(LIGHT_SHADER, "color", LIGHT_DIFFUSE)
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }

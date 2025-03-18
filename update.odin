@@ -26,29 +26,32 @@ update_stuff :: proc() {
     im.Begin("stuff")
     im.SliderFloat("shininess", &SHININESS, 0, 256)
     im.Checkbox("use_spec", &USE_SPEC)
+    im.ColorEdit3("light ambient", &LIGHT_AMBIENT, {.HDR, .Float})
+    im.ColorEdit3("light diffuse", &LIGHT_DIFFUSE, {.HDR, .Float})
+    im.ColorEdit3("light specular", &LIGHT_SPECULAR, {.HDR, .Float})
     im.End()
 }
 
 update_light :: proc() {
     if is_key_down(glfw.KEY_U) {
-        LIGHT_COLOR.r += 0.1
+        LIGHT_DIFFUSE.r += 0.1
     }
     if is_key_down(glfw.KEY_J) {
-        LIGHT_COLOR.r -= 0.1
+        LIGHT_DIFFUSE.r -= 0.1
     }
     if is_key_down(glfw.KEY_I) {
-        LIGHT_COLOR.g += 0.1
+        LIGHT_DIFFUSE.g += 0.1
     }
     if is_key_down(glfw.KEY_K) {
-        LIGHT_COLOR.g -= 0.1
+        LIGHT_DIFFUSE.g -= 0.1
     }
     if is_key_down(glfw.KEY_O) {
-        LIGHT_COLOR.b += 0.1
+        LIGHT_DIFFUSE.b += 0.1
     }
     if is_key_down(glfw.KEY_L) {
-        LIGHT_COLOR.b -= 0.1
+        LIGHT_DIFFUSE.b -= 0.1
     }
-    LIGHT_COLOR = linalg.clamp(LIGHT_COLOR, 0, 10)
+    LIGHT_DIFFUSE = linalg.clamp(LIGHT_DIFFUSE, 0, 10)
 
     mov: vec3
     if is_key_down(glfw.KEY_RIGHT) {
