@@ -23,54 +23,38 @@ update :: proc(delta: f32) {
 }
 
 update_stuff :: proc() {
-    im.Begin("stuff")
-    im.SliderFloat("shininess", &SHININESS, 0, 256)
-    im.Checkbox("use_spec", &USE_SPEC)
+    context.allocator = context.temp_allocator
+    defer free_all()
 
-    im.ColorEdit3("light ambient", &LIGHT.ambient, {.HDR, .Float})
-    im.ColorEdit3("light diffuse", &LIGHT.diffuse, {.HDR, .Float})
-    im.ColorEdit3("light specular", &LIGHT.specular, {.HDR, .Float})
+    {
+        im.Begin("stuff")
+        defer im.End()
+        im.SliderFloat("shininess", &SHININESS, 0, 256)
+        im.Checkbox("use_spec", &USE_SPEC)
+    }
 
-    im.End()
+
+
+    {
+        im.Begin("lights")
+        defer im.End()
+
+        for &light, i in lights {
+            if im.CollapsingHeader(fmt.caprint(i+1)) {
+                im.ColorEdit3("light ambient", &light.ambient, {.HDR, .Float})
+                im.ColorEdit3("light diffuse", &light.diffuse, {.HDR, .Float})
+                im.ColorEdit3("light specular", &light.specular, {.HDR, .Float})
+
+                #partial switch &l in light.inner {
+                case PointLight:
+                    im.SliderFloat3("light pos", &l.pos, -10, 10)
+                }
+            }
+        }
+    }
 }
 
 update_light :: proc() {
-    if is_key_down(glfw.KEY_U) {
-        LIGHT.diffuse.r += 0.1
-    }
-    if is_key_down(glfw.KEY_J) {
-        LIGHT.diffuse.r -= 0.1
-    }
-    if is_key_down(glfw.KEY_I) {
-        LIGHT.diffuse.g += 0.1
-    }
-    if is_key_down(glfw.KEY_K) {
-        LIGHT.diffuse.g -= 0.1
-    }
-    if is_key_down(glfw.KEY_O) {
-        LIGHT.diffuse.b += 0.1
-    }
-    if is_key_down(glfw.KEY_L) {
-        LIGHT.diffuse.b -= 0.1
-    }
-    LIGHT.diffuse = linalg.clamp(LIGHT.diffuse, 0, 10)
-
-    mov: vec3
-    if is_key_down(glfw.KEY_RIGHT) {
-        mov.x += 1
-    }
-    if is_key_down(glfw.KEY_LEFT) {
-        mov.x -= 1 
-    }
-    if is_key_down(glfw.KEY_UP) {
-        mov.z -= 1 
-    }
-    if is_key_down(glfw.KEY_DOWN) {
-        mov.z += 1 
-    }
-    l := LIGHT.inner.(PointLight)
-    l.pos += mov * SPEED * 5
-    LIGHT.inner = l
 }
 
 cursor := false

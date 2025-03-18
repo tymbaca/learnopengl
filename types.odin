@@ -63,6 +63,7 @@ Light :: struct {
     ambient: vec3,
     diffuse: vec3,
     specular: vec3,
+    show: bool,
     inner: union {
         DirectionalLight,
         PointLight,

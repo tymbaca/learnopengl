@@ -26,13 +26,15 @@ LIGHT := Light {
     ambient  = {0.1, 0.1, 0.1},
     diffuse  = {1, 1, 1},
     specular = {1, 1, 1},
+    show = true,
     inner = PointLight {
         pos = {4, 4, 4},
     }
 }
 
-light_positions := []vec3{
-    LIGHT.inner.(PointLight).pos,
+lights := []Light{
+    LIGHT,
+    LIGHT,
 }
 
 SHININESS: f32 = 64
@@ -73,7 +75,7 @@ draw :: proc() {
         shader.set(CUBE_SHADER, "viewMat", view)
         shader.set(CUBE_SHADER, "projectionMat", projection)
 
-        shader_set_light(CUBE_SHADER, "light", LIGHT)
+        shader_set_light(CUBE_SHADER, "light", lights[0])
         // shader.set(CUBE_SHADER, "light.position", LIGHT_POS)
         // shader.set(CUBE_SHADER, "light.ambient", LIGHT.ambient)
         // shader.set(CUBE_SHADER, "light.diffuse", LIGHT.diffuse)
@@ -90,7 +92,9 @@ draw :: proc() {
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
 
-    for light in ([]Light{LIGHT}) {
+    for light in lights {
+        if !light.show do continue
+
         gl.BindVertexArray(LIGHT_VAO)
         model := linalg.identity(mat4)
         model = linalg.matrix4_scale_f32({0.4, 0.4, 0.4}) * model
@@ -101,7 +105,7 @@ draw :: proc() {
         shader.set(LIGHT_SHADER, "viewMat", view)
         shader.set(LIGHT_SHADER, "projectionMat", projection)
 
-        shader.set(LIGHT_SHADER, "color", LIGHT.diffuse)
+        shader.set(LIGHT_SHADER, "color", light.diffuse)
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }

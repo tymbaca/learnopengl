@@ -110,7 +110,7 @@ main :: proc() {
 		imgui_impl_glfw.NewFrame()
 		im.NewFrame()
 
-		// im.ShowDemoWindow()
+		im.ShowDemoWindow()
 
 
         delta := f32(time.duration_milliseconds(time.since(last_frate)))
