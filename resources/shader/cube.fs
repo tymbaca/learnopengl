@@ -6,12 +6,18 @@ struct Material {
     float shininess;
 };
 
-struct Light {
-    vec3 position;
+const int directionalLightTag = 1;
+const int pointLightTag = 2;
+const int spotLightTag = 3;
 
+struct Light {
+    int tag; 
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    vec3 position;
+    vec3 direction;
 };
 
 in vec3 Normal;
@@ -31,7 +37,7 @@ vec4 getAmbient(Light light)
     return vec4(light.ambient, 1); // TODO: distance
 }
 
-vec4 getDiffuse(vec3 fragPos, vec3 normal, Light light)
+vec4 getDiffusePoint(vec3 fragPos, vec3 normal, Light light)
 {
     normal = normalize(normal);
     vec3 toLight = light.position - fragPos;
@@ -39,13 +45,30 @@ vec4 getDiffuse(vec3 fragPos, vec3 normal, Light light)
     // `-1 to 0` - dark side, `0 to 1` - light side
     float factor = dot(normalize(toLight), normalize(normal));
 
+    // TODO: distance
+
     factor = max(factor, 0.0); // so that dark side will remain ambient (not become more dark)
     vec3 resultLight = light.diffuse * factor;
 
     return vec4(resultLight, 1.0);
 }
 
-vec4 getSpecular(vec3 fragPos, vec3 normal, Light light, vec3 viewPos, vec3 strength, float shininess)
+vec4 getDiffuse(vec3 fragPos, vec3 normal, Light light)
+{
+    switch (light.tag) {
+        case directionalLightTag:
+            break;
+        case pointLightTag:
+            return getDiffusePoint(fragPos, normal, light);
+            break;
+        case spotLightTag:
+            break;
+    }
+
+    return vec4(0,0,0,1);
+}
+
+vec4 getSpecularPoint(vec3 fragPos, vec3 normal, Light light, vec3 viewPos, vec3 strength, float shininess)
 {
     vec3 toLight = light.position - fragPos;
     vec3 toReflect = reflect(-toLight, normal);
@@ -56,6 +79,21 @@ vec4 getSpecular(vec3 fragPos, vec3 normal, Light light, vec3 viewPos, vec3 stre
     factor = pow(factor, shininess); // less = more rough
 
     return vec4(light.specular * strength * factor, 1.0);
+}
+
+vec4 getSpecular(vec3 fragPos, vec3 normal, Light light, vec3 viewPos, vec3 strength, float shininess)
+{
+    switch (light.tag) {
+        case directionalLightTag:
+            break;
+        case pointLightTag:
+            return getSpecularPoint(fragPos, normal, light, viewPos, strength, shininess);
+            break;
+        case spotLightTag:
+            break;
+    }
+
+    return vec4(0,0,0,1);
 }
 
 void main()

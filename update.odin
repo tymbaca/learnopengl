@@ -26,32 +26,34 @@ update_stuff :: proc() {
     im.Begin("stuff")
     im.SliderFloat("shininess", &SHININESS, 0, 256)
     im.Checkbox("use_spec", &USE_SPEC)
-    im.ColorEdit3("light ambient", &LIGHT_AMBIENT, {.HDR, .Float})
-    im.ColorEdit3("light diffuse", &LIGHT_DIFFUSE, {.HDR, .Float})
-    im.ColorEdit3("light specular", &LIGHT_SPECULAR, {.HDR, .Float})
+
+    im.ColorEdit3("light ambient", &LIGHT.ambient, {.HDR, .Float})
+    im.ColorEdit3("light diffuse", &LIGHT.diffuse, {.HDR, .Float})
+    im.ColorEdit3("light specular", &LIGHT.specular, {.HDR, .Float})
+
     im.End()
 }
 
 update_light :: proc() {
     if is_key_down(glfw.KEY_U) {
-        LIGHT_DIFFUSE.r += 0.1
+        LIGHT.diffuse.r += 0.1
     }
     if is_key_down(glfw.KEY_J) {
-        LIGHT_DIFFUSE.r -= 0.1
+        LIGHT.diffuse.r -= 0.1
     }
     if is_key_down(glfw.KEY_I) {
-        LIGHT_DIFFUSE.g += 0.1
+        LIGHT.diffuse.g += 0.1
     }
     if is_key_down(glfw.KEY_K) {
-        LIGHT_DIFFUSE.g -= 0.1
+        LIGHT.diffuse.g -= 0.1
     }
     if is_key_down(glfw.KEY_O) {
-        LIGHT_DIFFUSE.b += 0.1
+        LIGHT.diffuse.b += 0.1
     }
     if is_key_down(glfw.KEY_L) {
-        LIGHT_DIFFUSE.b -= 0.1
+        LIGHT.diffuse.b -= 0.1
     }
-    LIGHT_DIFFUSE = linalg.clamp(LIGHT_DIFFUSE, 0, 10)
+    LIGHT.diffuse = linalg.clamp(LIGHT.diffuse, 0, 10)
 
     mov: vec3
     if is_key_down(glfw.KEY_RIGHT) {
@@ -66,7 +68,9 @@ update_light :: proc() {
     if is_key_down(glfw.KEY_DOWN) {
         mov.z += 1 
     }
-    LIGHT_POS += mov * SPEED * 5
+    l := LIGHT.inner.(PointLight)
+    l.pos += mov * SPEED * 5
+    LIGHT.inner = l
 }
 
 cursor := false

@@ -21,19 +21,18 @@ cubes := []Cube{
     {pos = {0,0,4}, scale = {1,1,1}},
 }
 
-Cube :: struct {
-    pos: vec3,
-    scale: vec3,
+
+LIGHT := Light {
+    ambient  = {0.1, 0.1, 0.1},
+    diffuse  = {1, 1, 1},
+    specular = {1, 1, 1},
+    inner = PointLight {
+        pos = {4, 4, 4},
+    }
 }
 
-LIGHT_POS := vec3{4,4,4}
-
-LIGHT_DIFFUSE := vec3{0.6, 1, 0.1}
-LIGHT_AMBIENT := LIGHT_DIFFUSE * 0.1
-LIGHT_SPECULAR := LIGHT_DIFFUSE
-
 light_positions := []vec3{
-    LIGHT_POS,
+    LIGHT.inner.(PointLight).pos,
 }
 
 SHININESS: f32 = 64
@@ -42,7 +41,7 @@ USE_SPEC: bool = true
 draw :: proc() {
 	// Set the opengl clear color
 	// 0-1 rgba values
-	gl.ClearColor(LIGHT_AMBIENT.r, LIGHT_AMBIENT.g, LIGHT_AMBIENT.b, 1.0)
+	gl.ClearColor(LIGHT.ambient.r, LIGHT.ambient.g, LIGHT.ambient.b, 1.0)
 	// Clear the screen with the set clearcolor
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 
@@ -74,10 +73,12 @@ draw :: proc() {
         shader.set(CUBE_SHADER, "viewMat", view)
         shader.set(CUBE_SHADER, "projectionMat", projection)
 
-        shader.set(CUBE_SHADER, "light.ambient", LIGHT_AMBIENT)
-        shader.set(CUBE_SHADER, "light.position", LIGHT_POS)
-        shader.set(CUBE_SHADER, "light.diffuse", LIGHT_DIFFUSE)
-        shader.set(CUBE_SHADER, "light.specular", LIGHT_SPECULAR)
+        shader_set_light(CUBE_SHADER, "light", LIGHT)
+        // shader.set(CUBE_SHADER, "light.position", LIGHT_POS)
+        // shader.set(CUBE_SHADER, "light.ambient", LIGHT.ambient)
+        // shader.set(CUBE_SHADER, "light.diffuse", LIGHT.diffuse)
+        // shader.set(CUBE_SHADER, "light.specular", LIGHT.specular)
+
         shader.set(CUBE_SHADER, "viewPos", CAMERA.pos)
 
         shader.set(CUBE_SHADER, "material.diffuse", i32(1))
@@ -89,18 +90,18 @@ draw :: proc() {
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }
 
-    for pos in ([]vec3{LIGHT_POS}) {
+    for light in ([]Light{LIGHT}) {
         gl.BindVertexArray(LIGHT_VAO)
         model := linalg.identity(mat4)
         model = linalg.matrix4_scale_f32({0.4, 0.4, 0.4}) * model
-        model = linalg.matrix4_translate_f32(pos) * model
+        model = linalg.matrix4_translate_f32(light.inner.(PointLight).pos) * model
         
         shader.use(LIGHT_SHADER)
         shader.set(LIGHT_SHADER, "modelMat", model)
         shader.set(LIGHT_SHADER, "viewMat", view)
         shader.set(LIGHT_SHADER, "projectionMat", projection)
 
-        shader.set(LIGHT_SHADER, "color", LIGHT_DIFFUSE)
+        shader.set(LIGHT_SHADER, "color", LIGHT.diffuse)
 
         gl.DrawArrays(gl.TRIANGLES, 0, 36)
     }

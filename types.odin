@@ -1,8 +1,11 @@
 package main
 
+import "core:fmt"
+import "core:strings"
 import "core:math"
 import "core:math/linalg"
 import "core:slice"
+import "shader"
 
 dot :: linalg.dot
 cross :: linalg.cross
@@ -50,3 +53,56 @@ Camera :: struct {
 //     ambient: vec3,
 //    
 // }
+
+Cube :: struct {
+    pos: vec3,
+    scale: vec3,
+}
+
+Light :: struct {
+    ambient: vec3,
+    diffuse: vec3,
+    specular: vec3,
+    inner: union {
+        DirectionalLight,
+        PointLight,
+        SpotLight,
+    }
+}
+
+DirectionalLight :: struct {
+    dir: vec3,
+}
+
+PointLight :: struct {
+    pos: vec3,
+
+    // kc: f32,
+    // kl: f32,
+    // kq: f32,
+}
+
+SpotLight :: struct {
+    pos: vec3,
+    dir: vec3,
+
+    angle: f32, // in degrees
+}
+
+shader_set_light :: proc(p: shader.Program, $name: cstring, light: Light) {
+    shader.set(p, name+".ambient", light.ambient)
+    shader.set(p, name+".diffuse", light.diffuse)
+    shader.set(p, name+".specular", light.specular)
+
+    switch l in light.inner {
+    case DirectionalLight:
+        shader.set(p, name+".tag", i32(1))
+        shader.set(p, name+".direction", l.dir)
+    case PointLight:
+        shader.set(p, name+".tag", i32(2))
+        shader.set(p, name+".position", l.pos)
+    case SpotLight:
+        shader.set(p, name+".tag", i32(3))
+        return
+    }
+}
