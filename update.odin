@@ -50,6 +50,10 @@ update_stuff :: proc() {
                     im.SliderFloat3("light dir", &l.dir, -1, 1)
                 case PointLight:
                     im.SliderFloat3("light pos", &l.pos, -10, 10)
+                case SpotLight:
+                    im.SliderFloat3("light dir", &l.dir, -1, 1)
+                    im.SliderFloat3("light pos", &l.pos, -10, 10)
+                    im.SliderFloat("light angle", &l.angle, 0, 180)
                 }
             }
         }

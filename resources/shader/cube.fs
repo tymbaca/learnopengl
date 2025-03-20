@@ -22,6 +22,8 @@ struct Light {
     float constant;
     float linear;
     float quadratic;
+
+    float angle; // cosine of the actual angle
 };
 
 in vec3 Normal;
@@ -41,6 +43,18 @@ float getAttenuation(float distance, float constant, float linear, float quadrat
     return 1.0 / (constant + (linear * distance) + (quadratic * distance * distance));
 }
 
+float getSpottedFactor(vec3 fragPos, Light light) 
+{
+    vec3 toFragDir = fragPos - light.position;
+    float angle = dot(normalize(light.direction), normalize(toFragDir));
+
+    if (angle < light.angle) {
+        return 0;
+    }
+
+    return 1;
+}
+
 vec4 getAmbientDiractional(Light light) 
 {
     return vec4(light.ambient, 1);
@@ -53,6 +67,15 @@ vec4 getAmbientPoint(vec3 fragPos, Light light)
     return vec4(ambient, 1);
 }
 
+vec4 getAmbientSpot(vec3 fragPos, Light light) 
+{
+    float spotted = 1;
+    // float spotted = getSpottedFactor(fragPos, light);
+    float dist = distance(fragPos, light.position);
+    vec3 ambient = light.ambient * getAttenuation(dist, light.constant, light.linear, light.quadratic);
+    return vec4(ambient * spotted, 1);
+}
+
 vec4 getAmbient(vec3 fragPos, Light light) 
 {
     switch (light.tag) {
@@ -61,7 +84,7 @@ vec4 getAmbient(vec3 fragPos, Light light)
         case pointLightTag:
             return getAmbientPoint(fragPos, light);
         case spotLightTag:
-            break;
+            return getAmbientSpot(fragPos, light);
     }
 
     return vec4(0,0,0,1);
@@ -95,6 +118,28 @@ vec4 getDiffusePoint(vec3 fragPos, vec3 normal, Light light)
     return vec4(resultLight, 1.0);
 }
 
+vec4 getDiffuseSpot(vec3 fragPos, vec3 normal, Light light)
+{
+    float spotted = getSpottedFactor(fragPos, light);
+    if (spotted == 0) {
+        return vec4(0,0,0,1);
+    }
+
+    normal = normalize(normal);
+    vec3 toLight = light.position - fragPos;
+    float distance = length(toLight);
+    // `-1 to 0` - dark side, `0 to 1` - light side
+    float factor = dot(normalize(toLight), normalize(normal));
+
+    factor = max(factor, 0.0); // so that dark side will remain ambient (not become more dark)
+    vec3 resultLight = light.diffuse * factor;
+
+    // apply distance
+    resultLight *= getAttenuation(distance, light.constant, light.linear, light.quadratic);
+
+    return vec4(resultLight * spotted, 1.0);
+}
+
 vec4 getDiffuse(vec3 fragPos, vec3 normal, Light light)
 {
     switch (light.tag) {
@@ -103,7 +148,7 @@ vec4 getDiffuse(vec3 fragPos, vec3 normal, Light light)
         case pointLightTag:
             return getDiffusePoint(fragPos, normal, light);
         case spotLightTag:
-            break;
+            return getDiffuseSpot(fragPos, normal, light);
     }
 
     return vec4(0,0,0,1);
@@ -135,6 +180,24 @@ vec4 getSpecularPoint(vec3 fragPos, vec3 normal, Light light, vec3 viewPos, vec3
     return vec4(light.specular * strength * factor, 1.0);
 }
 
+vec4 getSpecularSpot(vec3 fragPos, vec3 normal, Light light, vec3 viewPos, vec3 strength, float shininess)
+{
+    float spotted = getSpottedFactor(fragPos, light);
+    if (spotted == 0) {
+        return vec4(0,0,0,1);
+    }
+
+    vec3 toLight = light.position - fragPos;
+    vec3 toReflect = reflect(-toLight, normal);
+
+    vec3 toView = viewPos - fragPos;
+    
+    float factor = max(dot(normalize(toReflect), normalize(toView)), 0.0);
+    factor = pow(factor, shininess); // less = more rough
+
+    return vec4(light.specular * strength * factor * spotted, 1.0);
+}
+
 vec4 getSpecular(vec3 fragPos, vec3 normal, Light light, vec3 viewPos, vec3 strength, float shininess)
 {
     switch (light.tag) {
@@ -143,7 +206,7 @@ vec4 getSpecular(vec3 fragPos, vec3 normal, Light light, vec3 viewPos, vec3 stre
         case pointLightTag:
             return getSpecularPoint(fragPos, normal, light, viewPos, strength, shininess);
         case spotLightTag:
-            break;
+            return getSpecularSpot(fragPos, normal, light, viewPos, strength, shininess);
     }
 
     return vec4(0,0,0,1);

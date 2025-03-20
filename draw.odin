@@ -30,17 +30,27 @@ LIGHT := Light {
     // inner = DirectionalLight {
     //     dir = {0.5, -1, 0.5},
     // },
-    inner = PointLight {
-        pos = {4, 4, 4},
-        constant = 1,
-        linear = 0.1,
-        quadratic = 0.033,
-    },
+    // inner = PointLight {
+    //     pos = {4, 4, 4},
+    //     constant = 1,
+    //     linear = 0.1,
+    //     quadratic = 0.033,
+    // },
+    inner = SpotLight {
+        point =  PointLight {
+            pos = {4, 4, 4},
+            constant = 1,
+            linear = 0.1,
+            quadratic = 0.033,
+        },
+        dir = {-0.5, -1, -0.5},
+        angle = 40,
+    }
 }
 
 lights := []Light{
     LIGHT,
-    LIGHT,
+    // LIGHT,
 }
 
 SHININESS: f32 = 64
