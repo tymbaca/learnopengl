@@ -78,9 +78,9 @@ DirectionalLight :: struct {
 PointLight :: struct {
     pos: vec3,
 
-    // kc: f32,
-    // kl: f32,
-    // kq: f32,
+    constant: f32,
+    linear: f32,
+    quadratic: f32,
 }
 
 SpotLight :: struct {
@@ -102,6 +102,9 @@ shader_set_light :: proc(p: shader.Program, $name: cstring, light: Light) {
     case PointLight:
         shader.set(p, name+".tag", i32(2))
         shader.set(p, name+".position", l.pos)
+        shader.set(p, name+".constant", l.constant)
+        shader.set(p, name+".linear", l.linear)
+        shader.set(p, name+".quadratic", l.quadratic)
     case SpotLight:
         shader.set(p, name+".tag", i32(3))
         return

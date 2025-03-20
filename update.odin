@@ -46,6 +46,8 @@ update_stuff :: proc() {
                 im.ColorEdit3("light specular", &light.specular, {.HDR, .Float})
 
                 #partial switch &l in light.inner {
+                case DirectionalLight:
+                    im.SliderFloat3("light dir", &l.dir, -1, 1)
                 case PointLight:
                     im.SliderFloat3("light pos", &l.pos, -10, 10)
                 }

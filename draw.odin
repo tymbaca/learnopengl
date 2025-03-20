@@ -27,9 +27,15 @@ LIGHT := Light {
     diffuse  = {1, 1, 1},
     specular = {1, 1, 1},
     show = true,
+    // inner = DirectionalLight {
+    //     dir = {0.5, -1, 0.5},
+    // },
     inner = PointLight {
         pos = {4, 4, 4},
-    }
+        constant = 1,
+        linear = 0.1,
+        quadratic = 0.033,
+    },
 }
 
 lights := []Light{
@@ -95,10 +101,20 @@ draw :: proc() {
     for light in lights {
         if !light.show do continue
 
+        pos: vec3
+        #partial switch l in light.inner {
+        case DirectionalLight:
+            continue
+        case PointLight:
+            pos = l.pos
+        case SpotLight:
+            pos = l.pos
+        }
+
         gl.BindVertexArray(LIGHT_VAO)
         model := linalg.identity(mat4)
         model = linalg.matrix4_scale_f32({0.4, 0.4, 0.4}) * model
-        model = linalg.matrix4_translate_f32(light.inner.(PointLight).pos) * model
+        model = linalg.matrix4_translate_f32(pos) * model
         
         shader.use(LIGHT_SHADER)
         shader.set(LIGHT_SHADER, "modelMat", model)
