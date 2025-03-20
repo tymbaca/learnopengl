@@ -56,8 +56,8 @@ float getSpottedFactor(vec3 fragPos, Light light)
         return 1;
     }
 
-    return 0.5;
-    // return clamp(angle, light.outerCutoff, light.innerCutoff);
+    float epsilon = light.innerCutoff - light.outerCutoff;
+    return clamp((angle - light.outerCutoff) / epsilon, 0.0, 1.0);
 }
 
 vec4 getAmbientDiractional(Light light) 
