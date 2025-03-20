@@ -45,6 +45,7 @@ LIGHT := Light {
         },
         dir = {-0.5, -1, -0.5},
         angle = 40,
+        cutoff = 20,
     }
 }
 

@@ -23,7 +23,8 @@ struct Light {
     float linear;
     float quadratic;
 
-    float angle; // cosine of the actual angle
+    float innerCutoff; // cosine of the actual angle
+    float outerCutoff;
 };
 
 in vec3 Normal;
@@ -48,11 +49,15 @@ float getSpottedFactor(vec3 fragPos, Light light)
     vec3 toFragDir = fragPos - light.position;
     float angle = dot(normalize(light.direction), normalize(toFragDir));
 
-    if (angle < light.angle) {
+    if (angle < light.outerCutoff) {
         return 0;
     }
+    if (angle > light.innerCutoff) {
+        return 1;
+    }
 
-    return 1;
+    return 0.5;
+    // return clamp(angle, light.outerCutoff, light.innerCutoff);
 }
 
 vec4 getAmbientDiractional(Light light) 

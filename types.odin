@@ -88,6 +88,7 @@ SpotLight :: struct {
 
     dir: vec3,
     angle: f32, // in degrees
+    cutoff: f32, // in degrees
 }
 
 shader_set_light :: proc(p: shader.Program, $name: cstring, light: Light) {
@@ -117,6 +118,10 @@ shader_set_light :: proc(p: shader.Program, $name: cstring, light: Light) {
         shader.set(p, name+".quadratic", l.quadratic)
 
         shader.set(p, name+".direction", l.dir)
-        shader.set(p, name+".angle", cos(l.angle * RAD_PER_DEG))
+
+        inner := l.angle - l.cutoff / 2
+        outer := l.angle + l.cutoff / 2
+        shader.set(p, name+".innerCutoff", cos(inner * RAD_PER_DEG))
+        shader.set(p, name+".outerCutoff", cos(outer * RAD_PER_DEG))
     }
 }
