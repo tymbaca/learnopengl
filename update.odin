@@ -33,8 +33,6 @@ update_stuff :: proc() {
         im.Checkbox("use_spec", &USE_SPEC)
     }
 
-
-
     {
         im.Begin("lights")
         defer im.End()
@@ -62,6 +60,13 @@ update_stuff :: proc() {
 }
 
 update_light :: proc() {
+    #partial switch &l in lights[0].inner {
+    case SpotLight:
+        l.pos = CAMERA.pos
+        l.dir = CAMERA.dir
+    case PointLight:
+        l.pos = CAMERA.pos
+    }
 }
 
 cursor := false

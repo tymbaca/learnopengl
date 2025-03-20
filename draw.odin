@@ -26,7 +26,7 @@ LIGHT := Light {
     ambient  = {0.1, 0.1, 0.1},
     diffuse  = {1, 1, 1},
     specular = {1, 1, 1},
-    show = true,
+    // show = true,
     // inner = DirectionalLight {
     //     dir = {0.5, -1, 0.5},
     // },
